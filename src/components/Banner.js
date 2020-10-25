@@ -7,7 +7,9 @@ const Banner = (props) => {
                 <h1 className='banner-title'>{props.title}</h1>
                 <h2 className='subtitle'>{props.subtitle}</h2>
                 <h4 className='additional-info'>{props.additionalInformation}</h4>
-                {props.children}
+                <div className='banner-content'>
+                    {props.children}
+                </div>
             </div>
         </div>
     )
