@@ -18,7 +18,7 @@ const Header = () => {
                         <MenuItem to='/'>Home</MenuItem>
                         <MenuItem to='launches'>Launches</MenuItem>
                         <MenuItem to='rockets'>Rockets</MenuItem>
-                        <MenuItem to='ships'>Rockets</MenuItem>
+                        <MenuItem to='ships'>Ships</MenuItem>
                         <span className='primary-button-container'>
                             <Button large={true}>
                                 <MenuItem to='/about'>About</MenuItem>
