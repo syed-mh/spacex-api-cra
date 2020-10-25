@@ -1,0 +1,53 @@
+button.primary-button
+    background: $primary-gradient
+    position: relative
+    z-index: 1
+    border: 0
+    padding: 0
+    display: inline-block
+    color: $primary-color
+    outline: none
+
+    span.button-text
+        z-index: 2
+        color: $primary-font-color
+        text-transform: uppercase
+        letter-spacing: 1px
+        font-size: 1.1rem
+        display: inline-block
+        transition: color 100ms ease-in-out
+
+        a
+            text-decoration: none
+            color: inherit !important
+
+    span.button-text
+        padding: 10px 20px
+
+    &::before
+        content: ''
+        display: block
+        width: calc(100% - 4px)
+        height: calc(100% - 4px)
+        position: absolute
+        top: 2px
+        left: 2px
+        background: $dark-background-color
+        z-index: -1
+        border-radius: $rounded-small
+        transition: opacity 100ms ease-in-out
+
+    &:hover
+        // background: $dark-background-color
+
+        span.button-text, a
+            color: $dark-background-color
+
+        &::before
+            opacity: 0
+
+    &.large
+
+        span.button-text
+            padding: 15px 35px
+    

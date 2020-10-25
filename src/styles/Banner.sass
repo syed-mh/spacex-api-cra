@@ -1,0 +1,42 @@
+div.banner
+    text-align: center
+    padding: 100px 150px
+    position: relative
+    background: url('../images/countdown-bg.jpg')
+    background-position: bottom center
+    background-repeat: no-repeat
+    background-size: cover
+
+    &::before
+        content: ''
+        display: block
+        position: absolute
+        background: rgba(0, 0, 0, 0.3)
+        top: 0
+        left: 0
+        height: 100%
+        width: 100%
+        z-index: 1
+
+    div.inner
+        position: relative
+        z-index: 2
+        color: $dark-background-color
+    
+        h1, h2, h3, h4, h5, h6, p, a, li, span
+            color: inherit
+
+        h1.banner-title
+            font-size: 3rem
+            line-height: 3rem
+            margin: 0 0 50px
+
+        h2.subtitle
+            margin: 10px 0
+        
+        h4.additional-info
+            margin: 10px 0
+
+        div.countdown-wrapper
+            padding: 0 125px
+            margin: 50px 0 0

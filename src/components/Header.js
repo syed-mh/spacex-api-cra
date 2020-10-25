@@ -1,34 +1,33 @@
 import React from 'react';
+import MenuItem from './MenuItem'
+import Button from './Button'
 import {NavLink} from 'react-router-dom';
+import logo from '../images/logo.png'
 
 const Header = () => {
     return(
-        <div id='main-header' classNames='shadow long'>
+        <header id='main-header' className='shadow-long'>
             <nav>
-                <div className='left'>
-
-                </div>
-                <div className='right'>
+                <span className='left'>
+                    <NavLink to='/' className='logo-wrapper'>
+                        <img className='website-logo' src={logo} alt='Website Logo' />
+                    </NavLink>
+                </span>
+                <span className='right'>
                     <ul>
-                        <li className='active'>
-                            <NavLink to='/' activeClassName='active'>Home</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to='/launches' activeClassName='active'>Launches</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to='/rockets' activeClassName='active'>Rockets</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to='/ships' activeClassName='active'>Ships</NavLink>
-                        </li>
-                        <div className='primary-button-container rounded'>
-                            <NavLink to='/about' className='primary-button large'>About</NavLink>
-                        </div>
+                        <MenuItem to='/'>Home</MenuItem>
+                        <MenuItem to='launches'>Launches</MenuItem>
+                        <MenuItem to='rockets'>Rockets</MenuItem>
+                        <MenuItem to='ships'>Rockets</MenuItem>
+                        <span className='primary-button-container'>
+                            <Button large={true}>
+                                <MenuItem to='/about'>About</MenuItem>
+                            </Button>
+                        </span>
                     </ul>
-                </div>
+                </span>
             </nav>
-        </div>
+        </header>
     )
 }
 
