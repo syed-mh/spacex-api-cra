@@ -1,0 +1,37 @@
+div#preloader
+  position: absolute
+  width: 100%
+  height: 100%
+  top: 0
+  left: 0
+  background-color: $dark-background-color
+  z-index: 9999
+  display: flex
+  align-items: center
+  justify-content: center
+
+span.progress
+    display: inline-block
+    width: 100px
+    height: 100px
+    border-radius: 50%
+    overflow: hidden
+
+span.fill
+    width: 100%
+    height: 100%
+    display: block
+    position: relative
+    background: $primary-font-color
+    border-radius: 50%
+    animation-name: eclipse
+    animation-duration: 2s
+    animation-iteration-count: infinite
+    animation-timing-function: linear
+
+@keyframes eclipse
+  0%
+    left: -150%
+
+  100%
+    left: 150%

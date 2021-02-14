@@ -2,7 +2,7 @@ import React from 'react';
 import MenuItem from './MenuItem'
 import Button from './Button'
 import {NavLink} from 'react-router-dom';
-import logo from '../images/logo.png'
+import Logo from './Logo'
 
 const Header = () => {
     return(
@@ -10,7 +10,7 @@ const Header = () => {
             <nav>
                 <span className='left'>
                     <NavLink to='/' className='logo-wrapper'>
-                        <img className='website-logo' src={logo} alt='Website Logo' />
+                        <Logo />
                     </NavLink>
                 </span>
                 <span className='right'>
