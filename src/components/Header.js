@@ -16,9 +16,11 @@ const Header = () => {
                 <span className='right'>
                     <ul>
                         <MenuItem to='/'>Home</MenuItem>
+                        <MenuItem to='/history'>History</MenuItem>
                         <MenuItem to='launches'>Launches</MenuItem>
                         <MenuItem to='rockets'>Rockets</MenuItem>
                         <MenuItem to='ships'>Ships</MenuItem>
+                        <MenuItem to='launchpads'>Launchpads</MenuItem>
                         <span className='primary-button-container'>
                             <Button large={true}>
                                 <MenuItem to='/about'>About</MenuItem>

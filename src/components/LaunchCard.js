@@ -1,17 +1,18 @@
 import React from 'react'
 import imagePlaceholder from '../images/placeholder.png'
-import articleLogo from '../images/article.png'
-import wikipediaLogo from '../images/wikipedia.png'
-import redditLogo from '../images/reddit.png'
-import youtubeLogo from '../images/youtube.png'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import articleLogo from '../images/article.png'
+// import wikipediaLogo from '../images/wikipedia.png'
+// import redditLogo from '../images/reddit.png'
+// import youtubeLogo from '../images/youtube.png'
 
 const LaunchCard = (props) => {
 
     return (
-        <article className='card-container' key={props.cardDetails.flight_number}>
+        <article className='card-container' >
             <main className='card rounded-large shadow'>
                 <div className='card-image'>
-                    {props.cardDetails.links.flickr.original ? 
+                    {props.cardDetails.links.flickr.original.length ? 
                         <img className='rounded' src={props.cardDetails.links.flickr.original[0]} alt={props.cardDetails.name}/>
                         :
                         <img className='rounded' src={imagePlaceholder} alt='Photos not found'/>
@@ -27,12 +28,13 @@ const LaunchCard = (props) => {
                 <h6 className='card-date'>{new Date(props.cardDetails.date_utc).toLocaleDateString('en', {day: 'numeric', month: 'short', year: 'numeric', hour:'numeric', minute: 'numeric', second: 'numeric'})}</h6>
                 <div className='external-links'>
                 <span>External Links:</span>
-                    {props.cardDetails.links.article && <a key={`article_${props.cardDetails.flight_number}`} href={props.cardDetails.links.article} target='_blank' rel="noreferrer noopener"><img src={articleLogo} alt='Generic Article Icon' /></a>}
-                    {props.cardDetails.links.reddit && <a key={`reddit_${props.cardDetails.flight_number}`} href={props.cardDetails.links.reddit.launch} target='_blank' rel="noreferrer noopener"><img src={redditLogo} alt='Reddit Icon' /></a>}
-                    {props.cardDetails.links.webcast && <a key={`webcast_${props.cardDetails.flight_number}`} href={props.cardDetails.links.webcast} target='_blank' rel="noreferrer noopener"><img src={youtubeLogo} alt='YouTube Icon' /></a>}
-                    {props.cardDetails.links.wikipedia && <a key={`wiki_${props.cardDetails.flight_number}`} href={props.cardDetails.links.wikipedia} target='_blank' rel="noreferrer noopener"><img src={wikipediaLogo} alt='Wikipedia Icon' /></a>}
+                    {props.cardDetails.links.google_maps && <a href={props.cardDetails.links.google_maps} target='_blank' rel='noreferrer noopener'><FontAwesomeIcon icon={['fas','map-marker-alt' ]} /></a>}
+                    {props.cardDetails.links.article && <a href={props.cardDetails.links.article} target='_blank' rel='noreferrer noopener'><FontAwesomeIcon icon={['fas', 'newspaper']} /></a>}
+                    {props.cardDetails.links.reddit && <a href={props.cardDetails.links.reddit.launch} target='_blank' rel='noreferrer noopener'><FontAwesomeIcon icon={['fab', 'reddit-alien']} /></a>}
+                    {props.cardDetails.links.webcast && <a href={props.cardDetails.links.webcast} target='_blank' rel='noreferrer noopener'><FontAwesomeIcon icon={['fab', 'youtube']} /></a>}
+                    {props.cardDetails.links.wikipedia && <a href={props.cardDetails.links.wikipedia} target='_blank' rel='noreferrer noopener'><FontAwesomeIcon icon={['fab', 'wikipedia-w']} /></a>}
                 </div>
-                <p className='card-details'>{props.cardDetails.details}</p>
+                <span className='card-details'>{props.cardDetails.details}</span>
             </main>
         </article>
     )

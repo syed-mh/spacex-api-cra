@@ -1,0 +1,27 @@
+h2.section-title
+    margin-bottom: 35px
+
+    span.underline
+        display: block
+        width: 100px
+        height: 5px
+        position: relative
+        margin: 15px auto 0
+
+        &::before, &::after
+            content: ''
+            display: block
+            position: absolute
+            height: 100%
+            top: 0
+            border-radius: 20px
+            
+        &::before
+            width: 20%
+            background-color: $primary-font-color
+            left: 0
+
+        &::after
+            width: 70%
+            background: linear-gradient(90deg, $primary-font-color, $secondary-color)
+            right: 0

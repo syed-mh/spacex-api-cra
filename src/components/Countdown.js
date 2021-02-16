@@ -7,9 +7,9 @@ const Countdown = (props) => {
 
     const calculateCountdown = () => {
 
-        const   endDate = new Date(props.date),
-                    startDate = new Date(),
-                    difference = (endDate - startDate) >= 0 ? (endDate - startDate)/1000 : 0
+        const   endDate     = new Date(props.date),
+                startDate   = new Date(),
+                difference  = (endDate - startDate) >= 0 ? (endDate - startDate)/1000 : 0
                             
             if(difference) {
                             
@@ -38,24 +38,34 @@ const Countdown = (props) => {
 
     }
     
+    useEffect(calculateCountdown, [])
+
     useEffect (() => {
+        
+        const countdownInterval = setInterval(calculateCountdown, 1000)
 
-        calculateCountdown()
-
-        setInterval(() => {
-
-            calculateCountdown()
-
-        }, 1000)
+        return (() => clearInterval(countdownInterval))
 
     }, [])
 
     return (
         <div className='countdown-wrapper'>
-            <CountdownSegment name='Days' value={countdown ? countdown.days : 0} />
-            <CountdownSegment name='Hours' value={countdown ? countdown.hours : 0} />
-            <CountdownSegment name='Minutes' value={countdown ? countdown.minutes : 0} />
-            <CountdownSegment name='Seconds' value={countdown ? countdown.seconds : 0} />
+            <CountdownSegment
+                name='Days'
+                value={countdown ? countdown.days : 0}
+            />
+            <CountdownSegment
+                name='Hours'
+                value={countdown ? countdown.hours : 0}
+            />
+            <CountdownSegment
+                name='Minutes'
+                value={countdown ? countdown.minutes : 0}
+            />
+            <CountdownSegment
+                name='Seconds'
+                value={countdown ? countdown.seconds : 0}
+            />
         </div>
     )
 }

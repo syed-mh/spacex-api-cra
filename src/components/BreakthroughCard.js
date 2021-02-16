@@ -2,7 +2,6 @@ import React from 'react'
 import Button from './Button'
 
 const breakthroughCard = (props) => {
-    console.log(props)
     return (
         <article className='breakthrough-card'>
             <div className='card-content rounded shadow'>
@@ -12,7 +11,7 @@ const breakthroughCard = (props) => {
                 <h3 className='breakthrough-title'>{props.cardDetails.title}</h3>
                 <h5>Excerpt:</h5>
                 <p className='breakthrough-summary'>{props.cardDetails.details}</p>
-                <Button link={props.cardDetails.links.article}>Read More</Button>
+                {props.cardDetails.links.article && <Button type='secondary' link={props.cardDetails.links.article}>Read More</Button>}
             </div>
             <div className='card-number'>
                 <span></span>
