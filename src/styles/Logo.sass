@@ -1,7 +1,8 @@
 div.logo
     position: relative
 
-    span.logo-text, span.logo-bg
+    span.logo-text, span.logo-bg, span.hidden
+        text-transform: uppercase
         position: absolute
         display: block
         font-size: 3rem
@@ -10,7 +11,15 @@ div.logo
         font-family: $font-family
         transform: skew(-10deg)
 
+    span.hidden
+        display: inline-block
+        width: auto
+        opacity: 0
+        position: relative
+
     span.logo-text
+        top: 0
+        left: 0
         color: $primary-font-color
         mix-blend-mode: darken
         -webkit-text-stroke: 2px $primary-font-color
@@ -19,18 +28,15 @@ div.logo
     span.logo-bg
         top: 3px
         left: 3px
-        background-image: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3)
-        background-size: 1000% 1000%
+        background-image: linear-gradient(90deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #ff2400)
+        background-size: 2000%
         background-clip: text
         -webkit-text-fill-color: transparent
         animation: rainbowFury infinite 10s linear
 
 @keyframes rainbowFury
     0%
-        background-position: 0% 82%
-
-    50%
-        background-position: 100% 19%
+        background-position-x: 0%
 
     100%
-        background-position: 0% 82%
+        background-position-x: 100%

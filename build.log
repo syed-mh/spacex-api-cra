@@ -1,0 +1,18 @@
+
+> spacex-api-cra@0.1.0 build /mnt/c/Users/syedm/Desktop/repos/spacex-api-cra
+> react-scripts build
+
+Creating an optimized production build...
+Failed to compile.
+
+./src/App.sass
+Error: Missing binding /mnt/c/Users/syedm/Desktop/repos/spacex-api-cra/node_modules/node-sass/vendor/linux-x64-72/binding.node
+Node Sass could not find a binding for your current environment: Linux 64-bit with Node.js 12.x
+
+Found bindings for the following environments:
+  - Windows 64-bit with Node.js 12.x
+
+This usually happens because your environment has changed since running `npm install`.
+Run `npm rebuild node-sass` to download the binding for your current environment.
+
+

@@ -38,6 +38,7 @@ const Countdown = (props) => {
 
     }
     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(calculateCountdown, [])
 
     useEffect (() => {
@@ -46,6 +47,7 @@ const Countdown = (props) => {
 
         return (() => clearInterval(countdownInterval))
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

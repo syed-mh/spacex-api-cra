@@ -1,0 +1,113 @@
+@media screen and ( max-width: 1024px )
+    
+    .narrow
+        width: 75%
+
+    div.banner
+        
+        div.inner
+            
+            div.banner-content
+                padding: 0
+
+
+@media screen and ( max-width: 998px )
+
+    header#main-header
+        height: 75px
+        padding: 20px
+
+        div.logo span.logo-text, div.logo span.logo-bg, div.logo span.hidden
+            font-size: 2.5rem
+            line-height: 2.5rem
+        
+        div.container
+            
+            span.left, span.right
+                top: 0
+                width: auto
+                height: 100%
+                display: flex
+                align-items: center
+                
+            span.right
+                right: 0
+
+                nav
+                    
+                    &.desktop-nav
+                        display: none
+
+                    &.mobile-nav
+                        display: flex
+            
+            span.left
+                left: 0
+
+    body
+
+        main.content-container
+            padding: 15px
+            min-height: calc(100vh - 75px - 60px)
+            margin-top: 75px
+
+
+@media screen and ( max-width: 768px )
+
+    .narrow
+        width: 90%
+
+    div.banner
+        padding: 50px
+
+    article.card-container
+        width: 100%
+        padding: 10px 0
+
+    article.breakthrough-card
+        width: 100%
+        padding: 10px 0
+
+    section.launch-opener
+        
+        div.content-container
+            
+            img
+                width: 100%
+                display: block
+                height: 30vh
+    
+            div.launch-highlights-container
+                width: 100%
+                display: block
+
+@media screen and ( max-width: 480px )
+
+    .narrow
+        width: 100%
+
+    section.page-section
+        padding: 25px 0
+
+    div.banner
+        padding: 35px 25px
+
+        div.inner
+
+            h1.banner-title
+                font-size: 2.5rem
+                line-height: 2.5rem
+
+            h2.subtitle
+                font-size: 1.7rem
+                line-height: 1.7rem
+
+            h4.additional-info
+                font-size: 1.4rem
+                line-height: 1.4rem
+
+            span.countdown-segment
+
+                h2.number
+                    font-size: 2.5rem
+                    line-height: 2.5rem

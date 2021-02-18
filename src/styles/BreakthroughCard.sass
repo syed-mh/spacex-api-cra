@@ -13,6 +13,18 @@ article.breakthrough-card
         box-sizing: border-box
         position: relative
         overflow: visible
+        background: $light-background-color
+
+        h3
+            transition: color $transition
+        
+        a
+            text-decoration: none
+
+            &:hover
+
+                h3
+                    color: $secondary-color
 
         h6.breakthrough-date
             margin: 0
@@ -37,6 +49,9 @@ article.breakthrough-card
             text-transform: capitalize
             margin: 0
 
+            svg
+                padding-left: 20px
+
         h5
             margin: 25px 0 10px
 
@@ -45,8 +60,8 @@ article.breakthrough-card
 
         button.secondary-button
             position: absolute
-            top: 10px
-            right: 10px
+            top: 0
+            right: 0
 
     div.card-number
         width: auto

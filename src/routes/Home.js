@@ -1,64 +1,49 @@
 import React, { useState, useEffect } from 'react';
 
 // IMPORT COMPONENTS
-import Banner from '../components/Banner'
-import Countdown from '../components/Countdown'
-import Preloader from '../components/Preloader'
-import Button from '../components/Button'
-import LaunchCard from '../components/LaunchCard'
+import Banner           from '../components/Banner'
 import BreakthroughCard from '../components/BreakthroughCard'
-import SectionTitle from '../components/SectionTitle'
+import Button           from '../components/Button'
+import Countdown        from '../components/Countdown'
+import LaunchCard       from '../components/LaunchCard'
+import LaunchLineChart  from '../components/LaunchLineChart'
+import Preloader        from '../components/Preloader'
+import SectionTitle     from '../components/SectionTitle'
+
+// IMPORT API FETCH CLASS
+import APIFetchEvents from '../js/APIFetchEvents';
 
 const Home = () => {
 
     // STATES POPULATED BY FETCH REQUESTS
-    const [nextLaunch, setNextLaunch]       = useState({})
-    const [pastLaunches, setPastLaunches]   = useState([])
-    const [about, setAbout]                 = useState([])
-    const [launchpads, setLaunchpads]       = useState([])
-    const [breakthroughs, setBreakthroughs] = useState([])
+    const [ nextLaunch, setNextLaunch ]       = useState({})
+    const [ pastLaunches, setPastLaunches ]   = useState([])
+    const [ launchpads, setLaunchpads ]       = useState([])
+    const [ breakthroughs, setBreakthroughs ] = useState([])
 
     // STATES POPULATED BY PROCESSING FETCHED DATA
-    const [analytics, setAnalytics]         = useState([])
-    const [processed, setProcessed]         = useState(false)
-    const [preloader, setPreloader]         = useState(true)
+    const [ analytics, setAnalytics  ]         = useState([])
+    const [ processed, setProcessed  ]         = useState(false)
+    const [ preloader, setPreloader  ]         = useState(true)
 
-    const _setters = {
-        setNextLaunch   : setNextLaunch,
-        setPastLaunches : setPastLaunches,
-        setBreakthroughs: setBreakthroughs,
-        setAbout        : setAbout,
-        setLaunchpads   : setLaunchpads,
-    }
-
-    const APIFetchEvents = setters => {
-        const _API_URL = 'https://api.spacexdata.com/v4'
-        const _REQUESTS = [
-            fetch(`${_API_URL}/launches/next`),
-            fetch(`${_API_URL}/launches/past`),
-            fetch(`${_API_URL}/company`),
-            fetch(`${_API_URL}/history`),
-            fetch(`${_API_URL}/launchpads`)
-        ]
-
-        Promise.all(_REQUESTS)
-            .then(results => Promise.all(results.map(result => result.json())))
-            .then(jsonData => {
-                setters.setNextLaunch(jsonData[0])
-                setters.setPastLaunches(jsonData[1].reverse())
-                setters.setAbout(jsonData[2])
-                setters.setBreakthroughs(jsonData[3])
-                setters.setLaunchpads(jsonData[4])
-            })
-    }
+    const APIFetch = new APIFetchEvents([
+        {endpoint: 'launches/next', setter: setNextLaunch},
+        {endpoint: 'launches/past', setter: setPastLaunches, reverse: true},
+        {endpoint: 'history', setter: setBreakthroughs},
+        {endpoint: 'launchpads', setter: setLaunchpads}
+    ])
 
     useEffect(() => {
-        APIFetchEvents(_setters)
+
+        APIFetch.get()
+        document.title = 'Home | SpaceX Data Aggregation by Syed MH'
+
     }, [])
 
     useEffect(() => {
         if(!processed) {
-        
+
+            console.log(pastLaunches)
             if(pastLaunches.length && launchpads.length) {
 
                 const analyticsData = {
@@ -71,30 +56,25 @@ const Home = () => {
 
                 pastLaunches.forEach(launch => {
                     const year = new Date(launch.date_utc).getFullYear()
-                    
-                    !analyticsData.years.includes(year) && analyticsData.years.push(year)
+
+                    !analyticsData.years.includes(year) && analyticsData.years.unshift(year)
+
+                    if(!analyticsData.successfulLaunchesByYear[year]) analyticsData.successfulLaunchesByYear[year] = 0
+                    if(!analyticsData.failedLaunchesByYear[year]) analyticsData.failedLaunchesByYear[year] = 0
 
                     if(launch.success) {
-                        if(!analyticsData.successfulLaunchesByYear[year]) {
-                            analyticsData.successfulLaunchesByYear[year] = 1
-                        } else {
-                            analyticsData.successfulLaunchesByYear[year]++
-                        }
+                        analyticsData.successfulLaunchesByYear[year]++
                         analyticsData.successes++
                     } else {
-                        if(!analyticsData.failedLaunchesByYear[year]) {
-                            analyticsData.failedLaunchesByYear[year] = 1
-                        } else {
-                            analyticsData.failedLaunchesByYear++
-                        }
+                        analyticsData.failedLaunchesByYear[year]++
                         analyticsData.failures++
                     }
                 })
 
-                setAnalytics(analytics)
+                setAnalytics(analyticsData)
 
                 if(launchpads.length) {
-                    const newPastLaunches = [...pastLaunches]
+                    const newPastLaunches = [...pastLaunches.slice(0,3)]
                     newPastLaunches.forEach(launch => {
                         for(const launchpad of launchpads) {
                             if(launch.launchpad === launchpad.id) {
@@ -103,13 +83,13 @@ const Home = () => {
                             }
                         }
                     })
-                    
-                    setPastLaunches(newPastLaunches)
+
                     setProcessed(true)
+                    setPastLaunches(newPastLaunches)
                 }
 
             }
-            
+
         }
 
     }, [pastLaunches, launchpads])
@@ -117,10 +97,8 @@ const Home = () => {
     useEffect(() => processed && setPreloader(false), [processed])
 
     if(preloader) {
-        
-        return (
-            <Preloader />
-        )
+
+        return <Preloader />
 
     } else {
 
@@ -144,17 +122,9 @@ const Home = () => {
                     <Button to='/launches'>View All</Button>
                 </section>
                 <section className='stats page-section'>
-                    <SectionTitle>About SpaceX</SectionTitle>
-                    <p className='spacex-summary narrow '>
-                        {about.summary}
-                    </p>
-                    <article className='about-card half'>
-                        <div className='card-container rounded shadow'>
-                            <h4 className='title'># of Employees</h4>
-                            <h2 className='value'>{about.employees}</h2>
-                        </div>
-                    </article>
-                    <div className='content-container'>
+                    <SectionTitle>Launch History</SectionTitle>
+                    <div className='content-container narrow'>
+                        <LaunchLineChart data={analytics} />
                     </div>
                 </section>
                 <section className='breakthroughs page-section'>

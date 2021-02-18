@@ -1,6 +1,9 @@
 import React from 'react'
 import imagePlaceholder from '../images/placeholder.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { NavLink } from 'react-router-dom'
+
+import Button from './Button'
 // import articleLogo from '../images/article.png'
 // import wikipediaLogo from '../images/wikipedia.png'
 // import redditLogo from '../images/reddit.png'
@@ -12,11 +15,7 @@ const LaunchCard = (props) => {
         <article className='card-container' >
             <main className='card rounded-large shadow'>
                 <div className='card-image'>
-                    {props.cardDetails.links.flickr.original.length ? 
-                        <img className='rounded' src={props.cardDetails.links.flickr.original[0]} alt={props.cardDetails.name}/>
-                        :
-                        <img className='rounded' src={imagePlaceholder} alt='Photos not found'/>
-                    }
+                    <img className='rounded launch-photo' src={props.cardDetails.links.flickr.original.length ? props.cardDetails.links.flickr.original[0] : imagePlaceholder} alt={props.cardDetails.name}/>
                     <span className='mission-patch-container rounded shadow'>
                         <img className='mission-patch' src={props.cardDetails.links.patch.small} alt='Mission Patch' />
                     </span>
@@ -24,7 +23,9 @@ const LaunchCard = (props) => {
                         <p>{props.cardDetails.success ? 'Success' : 'Failure'}</p>
                     </span>
                 </div>
-                <h3 className='card-title'>{props.cardDetails.name}</h3>
+                <NavLink to={`/launches/${props.cardDetails.id}`}>
+                    <h3 className='card-title'>{props.cardDetails.name}</h3>
+                </NavLink>
                 <h6 className='card-date'>{new Date(props.cardDetails.date_utc).toLocaleDateString('en', {day: 'numeric', month: 'short', year: 'numeric', hour:'numeric', minute: 'numeric', second: 'numeric'})}</h6>
                 <div className='external-links'>
                 <span>External Links:</span>
@@ -35,6 +36,9 @@ const LaunchCard = (props) => {
                     {props.cardDetails.links.wikipedia && <a href={props.cardDetails.links.wikipedia} target='_blank' rel='noreferrer noopener'><FontAwesomeIcon icon={['fab', 'wikipedia-w']} /></a>}
                 </div>
                 <span className='card-details'>{props.cardDetails.details}</span>
+                <div className='view-launch-button-container'>
+                    <Button type='secondary' to={`/launches/${props.cardDetails.id}`}>View Launch</Button>
+                </div>
             </main>
         </article>
     )
