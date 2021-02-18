@@ -29,7 +29,7 @@ const Home = () => {
     const APIFetch = new APIFetchEvents([
         {endpoint: 'launches/next', setter: setNextLaunch},
         {endpoint: 'launches/past', setter: setPastLaunches, reverse: true},
-        {endpoint: 'history', setter: setBreakthroughs},
+        {endpoint: 'history', setter: setBreakthroughs, reverse: true},
         {endpoint: 'launchpads', setter: setLaunchpads}
     ])
 
@@ -43,7 +43,6 @@ const Home = () => {
     useEffect(() => {
         if(!processed) {
 
-            console.log(pastLaunches)
             if(pastLaunches.length && launchpads.length) {
 
                 const analyticsData = {
@@ -109,7 +108,7 @@ const Home = () => {
                 </Banner>
                 <section className='narrow page-section'>
                     <SectionTitle>About the Project</SectionTitle>
-                    <p className='section-description'>While this project is in no way, shape or form afilliated with Space X, it derives all of its data from the official Space X API. The purpose of this project is to showcase my skills as a developer, and to also show people some fun information about what Space X gets up to. Click the button below to learn more about the project, and explore this Single Page Application to see more from Space X!</p>
+                    <p className='section-description'>While this project is in no way, shape or form afilliated with Space X, it derives all of its data from the <a href='https://github.com/r-spacex/SpaceX-API/tree/master/docs/v4' target='_blank' rel='noopener'>unofficial Space X API</a>, which gets its data from SpaceX directly. The purpose of this project is to showcase my skills as a developer, and to also show people some fun information about what Space X gets up to. Click the button below to learn more about the project, and explore this Single Page Application to see more from Space X!</p>
                     <Button to='/about'>Learn More</Button>
                 </section>
                 <section className='past-launches page-section'>

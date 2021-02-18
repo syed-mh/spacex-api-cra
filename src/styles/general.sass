@@ -39,7 +39,7 @@ h1
     font-family: $font-family
     color: $primary-font-color
     font-weight: 400
-    letter-spacing: 3px
+    letter-spacing: 2px
     text-transform: uppercase
 
 h2
@@ -86,6 +86,12 @@ p, li, a, span
     font-family: $font-family
     color: $primary-font-color
     font-weight: 400
+
+a
+    transition: color $transition
+
+    &:hover
+        color: $secondary-color
 
 .rounded
     border-radius: $rounded-small
