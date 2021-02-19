@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Preloader from '../components/Preloader'
-import APIFetchEvents from '../js/APIFetchEvents'
+import APIFetchEvents from '../scripts/APIFetchEvents'
 
 const Launchpads = () => {
 

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import Preloader from '../components/Preloader'
-import APIFetchEvents from '../js/APIFetchEvents'
+import APIFetchEvents from '../scripts/APIFetchEvents'
 
 import imagePlaceholder from '../images/placeholder.png'
 
