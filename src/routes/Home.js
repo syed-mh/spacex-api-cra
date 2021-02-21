@@ -27,6 +27,8 @@ const Home = () => {
 
     }, [])
 
+    console.log(data)
+
     useEffect(() => Object.keys(data).length && setPreloader(false), [data])
 
     if(preloader) {
@@ -52,7 +54,7 @@ const Home = () => {
                     <SectionTitle>Recent Launches</SectionTitle>
                     <div className='content-container'>
                         {data.pastLaunches.map((launch, index) => {
-                            return index < 3 && <LaunchCard cardDetails={launch} key={index} />
+                            return index < 3 && <LaunchCard launch={launch} key={index} />
                         })}
                     </div>
                     <Button to='/launches'>View All</Button>

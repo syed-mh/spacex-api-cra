@@ -37,7 +37,7 @@ const Launches = () => {
                 </Helmet>
                 <div className='launches'>
                     {data.launches.map(launch => {
-                        return <LaunchCard key={launch.id} cardDetails={launch} />
+                        return <LaunchCard key={launch.id} launch={launch} />
                     })}
                     <pre>
                         {JSON.stringify(data.launches, null, 4)}

@@ -7,9 +7,6 @@
 const APIFetchEvents = class {
 
     constructor (ENDPOINTS = null) {
-        /**
-         * @type {{endpoint: String, reverse: Boolean}}
-         */
         this.endpoints = ENDPOINTS
     }
     /**
@@ -44,7 +41,7 @@ const APIFetchEvents = class {
      * Loop through launches to produce Analytics data for the home page
      * @private
      * @param { Array<Object> } LAUNCHES 
-     * @returns {{years: Array<Number>, successfulLaunchesByYear: Array<Object>, failedLaunchesByYear: Array<Object> }}
+     * @returns {{years: Array<Number>, successfulLaunchesByYear: {year: number}, failedLaunchesByYear: {year: number} }}
      */
     _setAnalyticsData = (LAUNCHES = []) => {
         try {
@@ -99,36 +96,41 @@ const APIFetchEvents = class {
      * @returns { Object } - Processed launch Object
      */
     _processLaunchCard = (LAUNCH = {}) => {
-        let { id, name, links, success, date_utc, details, launchpad } = LAUNCH
-        const _launch = {}
-        
-        /** @type { Number } */
-        _launch.id = id
-        /** @type { String } */
-        _launch.name = name
-        /** @type { String } */
-        _launch.details = details
-        /** @type { String } */
-        _launch.date_utc = new Date(date_utc).toLocaleDateString('en', {day: 'numeric', month: 'short', year: 'numeric', hour:'numeric', minute: 'numeric', second: 'numeric'})
-        /** @type { Boolean | Null } */
-        _launch.success = success
-        /** @type { String } */
-        _launch.launchpad = launchpad
-        /** @type { Object | Null } */
-        _launch.links = {}
-
-        if(links.article) _launch.links.article = links.article
-        for(const redditLink in links.reddit) {
-            if(redditLink) {
-                _launch.links.reddit = redditLink
-                break
+        try {
+            const { id, name, links, success, date_utc, details, launchpad } = LAUNCH
+            const _launch = {}   
+            /** @type { Number } */
+            _launch.id = id
+            /** @type { String } */
+            _launch.name = name
+            /** @type { String } */
+            _launch.details = details
+            /** @type { String } */
+            _launch.date_utc = new Date(date_utc).toLocaleDateString('en', {day: 'numeric', month: 'short', year: 'numeric', hour:'numeric', minute: 'numeric', second: 'numeric'})
+            /** @type { Boolean | Null } */
+            _launch.success = success
+            /** @type { String } */
+            _launch.launchpad = launchpad
+            /** @type { Object | Null } */
+            _launch.links = {}
+    
+            if(links.article) _launch.links.article = links.article
+            for(const redditLink in links.reddit) {
+                if(links.reddit[redditLink]) {
+                    _launch.links.reddit = links.reddit[redditLink]
+                    break
+                }
             }
+            if(links.webcast) _launch.links.webcast = links.webcast
+            if(links.wikipedia) _launch.links.wikipedia = links.wikipedia
+            if(links.flickr.original.length) _launch.featuredImage = links.flickr.original[0]
+            _launch.patch = links.patch.large
+            if(!Object.keys(_launch.links)) _launch.links = null
+            
+            return _launch
+        } catch(error) {
+            throw new Error(error)
         }
-        if(links.webcast) _launch.links.webcast = links.webcast
-        if(links.wikipedia) _launch.links.wikipedia = links.wikipedia
-        if(!Object.keys(_launch.links)) _launch.links = null
-        
-        return _launch
 
     }
     /**
@@ -161,10 +163,15 @@ const APIFetchEvents = class {
         try {
             /**@type { Array<Object> } */
             const _rawData = await this.get(['launches/next', 'launches/past', 'history', 'launchpads'])
+            let _pastLaunches = _rawData[1].map(launch => {
+                return this._processLaunchCard(launch)
+            })
+            _pastLaunches = this._sortResourcesByDate(_pastLaunches)
+            _pastLaunches = this._setLaunchpadPerLaunch(_pastLaunches, _rawData[3]).slice(0, 3)
             return {
                 nextLaunch: _rawData[0],
                 analytics: this._setAnalyticsData(_rawData[1]),
-                pastLaunches: this._setLaunchpadPerLaunch(this._sortResourcesByDate(_rawData[1], 'date_utc').slice(0, 3), _rawData[3]),
+                pastLaunches: _pastLaunches,
                 breakthroughs: this._sortResourcesByDate(_rawData[2], 'event_date_utc').slice(0, 4)
             }
         } catch(error) {
@@ -178,7 +185,7 @@ const APIFetchEvents = class {
      */
     _processLaunchesData = async () => {
         try {
-            let _rawData = await this.get(['launches', 'launchpads'])
+            const _rawData = await this.get(['launches', 'launchpads'])
             return {
                 launches: this._setLaunchpadPerLaunch(this._sortResourcesByDate(_rawData[0]), _rawData[1]),
             }
