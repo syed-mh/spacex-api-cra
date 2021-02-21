@@ -3,6 +3,7 @@ import Preloader from '../components/Preloader'
 import LaunchCard from '../components/LaunchCard'
 
 import APIFetchEvents from '../scripts/APIFetchEvents'
+import { Helmet } from 'react-helmet'
 
 const APIFetch = new APIFetchEvents()
 
@@ -13,10 +14,9 @@ const Launches = () => {
 
 
     useEffect(() => {
-        
+
         APIFetch.set('launches', setData)
-        document.title = 'Launches | SpaceX Data Aggregation by Syed MH'
-    
+
     },[])
 
     useEffect(() => {
@@ -31,14 +31,19 @@ const Launches = () => {
         return <Preloader />
     } else {
         return(
-            <div className='launches'>
-                {data.launches.map(launch => {
-                    return <LaunchCard key={launch.id} cardDetails={launch} />
-                })}
-                <pre>
-                    {JSON.stringify(data.launches, null, 4)}
-                </pre>
-            </div>
+            <>
+                <Helmet>
+                    <title>Launches | SpaceX Data Aggregation by Syed MH</title>
+                </Helmet>
+                <div className='launches'>
+                    {data.launches.map(launch => {
+                        return <LaunchCard key={launch.id} cardDetails={launch} />
+                    })}
+                    <pre>
+                        {JSON.stringify(data.launches, null, 4)}
+                    </pre>
+                </div>
+            </>
         )
     }
 }

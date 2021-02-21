@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 
 // IMPORT COMPONENTS
 import Banner           from '../components/Banner'
@@ -23,7 +24,6 @@ const Home = () => {
     useEffect(() => {
 
         APIFetch.set('home', setData)
-        document.title = 'Home | SpaceX Data Aggregation by Syed MH'
 
     }, [])
 
@@ -37,6 +37,9 @@ const Home = () => {
 
         return(
             <>
+                <Helmet>
+                    <title>Home | SpaceX Data Aggregation by Syed MH</title>
+                </Helmet>
                 <Banner title='Next Launch' subtitle={data.nextLaunch.name} additionalInformation={new Date(data.nextLaunch.date_utc).toLocaleDateString('en', {day: 'numeric', month: 'short', year: 'numeric'})}>
                     <Countdown date={data.nextLaunch.date_utc} />
                 </Banner>

@@ -1,8 +1,14 @@
 import React from 'react'
+import { Helmet } from 'react-helmet'
 
 const Launchpad = () => {
     return (
-        <div>Launchpad</div>
+        <>
+            <Helmet>
+                <title>Launchpad | SpaceX Data Aggregation by Syed MH</title>
+            </Helmet>
+            <div>Launchpad</div>
+        </>
     )
 }
 
