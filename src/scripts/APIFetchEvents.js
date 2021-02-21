@@ -186,8 +186,11 @@ const APIFetchEvents = class {
     _processLaunchesData = async () => {
         try {
             const _rawData = await this.get(['launches', 'launchpads'])
+            let _launches = this._sortResourcesByDate(_rawData[0])
+            _launches = this._setLaunchpadPerLaunch(_launches, _rawData[1])
+            _launches = _launches.map(launch => this._processLaunchCard(launch))
             return {
-                launches: this._setLaunchpadPerLaunch(this._sortResourcesByDate(_rawData[0]), _rawData[1]),
+                launches: _launches
             }
         } catch(error) {
             throw new Error(error)
