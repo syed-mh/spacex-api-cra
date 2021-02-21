@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Preloader from '../components/Preloader'
 import LaunchCard from '../components/LaunchCard'
 
 import APIFetchEvents from '../scripts/APIFetchEvents'
 import { Helmet } from 'react-helmet'
 
-const APIFetch = new APIFetchEvents()
-
 const Launches = () => {
 
     const [ data, setData ] = useState({})
     const [ preloader, setPreloader ] = useState(true)
 
+    const APIFetch = useRef(new APIFetchEvents())
 
     useEffect(() => {
 
-        APIFetch.set('launches', setData)
+        APIFetch.current.set('launches', setData)
 
     },[])
 

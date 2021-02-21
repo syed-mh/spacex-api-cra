@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 
 // IMPORT COMPONENTS
@@ -14,16 +14,16 @@ import SectionTitle     from '../components/SectionTitle'
 // IMPORT API FETCH CLASS
 import APIFetchEvents from '../scripts/APIFetchEvents'
 
-const APIFetch = new APIFetchEvents()
-
 const Home = () => {
 
     const [ data, setData ] = useState({})
     const [ preloader, setPreloader ] = useState(true)
 
+    const APIFetch = useRef(new APIFetchEvents())
+
     useEffect(() => {
 
-        APIFetch.set('home', setData)
+        APIFetch.current.set('home', setData)
 
     }, [])
 
