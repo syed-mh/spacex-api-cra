@@ -1,7 +1,7 @@
 import React from 'react'
 import imagePlaceholder from '../images/placeholder.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import Button from './Button'
 
@@ -23,9 +23,9 @@ const LaunchCard = (props) => {
                                 : 'Failure'}</p>
                     </span>
                 </div>
-                <NavLink to={`/launches/${props.launch.id}`}>
+                <Link to={`/launches/${props.launch.id}`}>
                     <h3 className='card-title'>{props.launch.name}</h3>
-                </NavLink>
+                </Link>
                 <h6 className='card-date'>{props.launch.date_utc}</h6>
                 {
                     props.launch.links &&
@@ -42,9 +42,9 @@ const LaunchCard = (props) => {
                     <span className='card-details'>{props.launch.details}</span>
                 }
                 {!(props.launch.success === null) &&
-                    <div className='view-launch-button-container'>
-                        <Button type='secondary' to={`/launches/${props.launch.id}`}>View Launch</Button>
-                    </div>
+                    <span className='view-launch-button rounded shadow-long'>
+                        <Link to={`/launches/${props.launch.id}`}>View Launch</Link>
+                    </span>
                 }
             </main>
         </article>
