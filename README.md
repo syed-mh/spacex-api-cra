@@ -1,6 +1,6 @@
 # About the Project
 
-This project is an API driven front-end single page application built with React. It consumes the [unofficial Spacex API (v4)](https://github.com/r-spacex/SpaceX-API/tree/master/docs/v4) and processes data to display various views across the application. The front-end is fairly straightforward at the moment, and my goal is to continue to evole the project in terms of aesthetics as well as functionality as time goes on.
+This project is an API driven front-end single page application built with React. It consumes the [unofficial Spacex API (v4)](https://github.com/r-spacex/SpaceX-API/tree/master/docs/v4) and processes data to display various views across the application. The front-end is fairly straightforward at the moment, and my goal is to continue to evolve the project in terms of aesthetics as well as functionality as time goes on.
 
 The goal of the project is to help me grow as a developer and develop a deeper understanding of React, as well as other JS related functionality, such as data processing, algorithms and managing responses from an API.
 
