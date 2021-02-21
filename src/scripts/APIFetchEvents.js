@@ -53,7 +53,7 @@ const APIFetchEvents = class {
             }
             LAUNCHES.forEach(_launch => {
                 const _launchYear = new Date(_launch.date_utc).getFullYear()
-                if(!_data.years.includes(_launchYear)) _data.years.unshift(_launchYear)
+                if(!_data.years.includes(_launchYear)) _data.years.push(_launchYear)
                 if(!_data.successfulLaunchesByYear[_launchYear]) _data.successfulLaunchesByYear[_launchYear] = 0
                 if(!_data.failedLaunchesByYear[_launchYear]) _data.failedLaunchesByYear[_launchYear] = 0
                 if(_launch.success) {
