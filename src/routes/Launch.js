@@ -10,94 +10,28 @@ import imagePlaceholder from '../images/placeholder.png'
 const Launch = () => {
 
     const [ launch, setLaunch ] = useState({})
-    const [ launchpads, setLaunchpads ] = useState([])
-    const [ ships, setShips ] = useState([])
-    const [ rockets, setRockets ] = useState([])
-    const [ crews, setCrew ] = useState([])
-    const [ payloads, setPayloads ] = useState([])
-
     const [ preloader, setPreloader] = useState(true)
-    const [ processed, setProcessed ] = useState(false)
 
-    const [ viewport, setViewport ] = useState({})
-
-    const launchHighlightImage = useRef()
-    const launchHighlightContainer = useRef()
+    const APIFetch = useRef(new APIFetchEvents())
 
     const { resourceId } = useParams()
 
-    const APIFetch = new APIFetchEvents([
-        {endpoint: `launches/${resourceId}`, setter: setLaunch},
-        {endpoint: 'launchpads', setter: setLaunchpads},
-        {endpoint: 'ships', setter: setShips},
-        {endpoint: 'rockets', setter: setRockets},
-        {endpoint: 'crew', setter: setCrew},
-        {endpoint: 'payloads', setter: setPayloads}
-    ])
-
-    const handleResize = () => setViewport({width: document.body.clientWidth, height: document.body.clientHeight})
+    let backgroundImage = useRef()
 
     useEffect(() => {
 
-        APIFetch.get()
-        setViewport({width: document.body.clientWidth, height: document.body.clientHeight})
-        window.addEventListener('resize', handleResize)
+        APIFetch.current.set(`launches/${resourceId}`, setLaunch)
 
-        return (() => window.removeEventListener('resize', handleResize))
-
-    }, [])
+    }, [resourceId])
 
     useEffect(() => {
-        if(!preloader && launchHighlightImage.current && launchHighlightContainer.current) {
-            let style;
-            if(viewport.width <= 768) {
-                style = ''
-            } else {
-                style = `height: ${launchHighlightContainer.current.offsetHeight}px;`
+        if(Object.keys(launch).length) {
+            backgroundImage.current = {
+                backgroundImage: `url(${launch.links.flickr.original.length ? launch.links.flickr.original[0] : imagePlaceholder})`
             }
-            launchHighlightImage.current.setAttribute('style', style)
+            setPreloader(false)
         }
-
-    }, [preloader, viewport, launchHighlightImage])
-
-    useEffect(() => {
-
-        if(ships.length && rockets.length && launchpads.length && crews.length && payloads.length && Object.keys(launch).length && !processed) {
-
-            const _launch = {...launch}
-            _launch.ships = ships.filter(ship => launch.ships.includes(ship.id))
-            _launch.fairings.ships = ships.filter(ship => launch.fairings.ships.includes(ship.id))
-            _launch.launchpad = launchpads.find(launchpad => launchpad.id === launch.launchpad)
-            _launch.rocket = rockets.find(rocket => rocket.id === launch.rocket)
-            _launch.crew = crews.filter(crew => launch.crew.includes(crew.id))
-            _launch.payloads = payloads.filter(payload => launch.payloads.includes(payload.id))
-            
-            setCrew([])
-            setShips([])
-            setRockets([])
-            setLaunchpads([])
-            setPayloads([])
-            setLaunch({..._launch})
-
-            setProcessed(true)
-
-            
-
-        }
-
-
-    }, [launch, ships, launchpads, rockets, crews, payloads ,processed])
-
-    useEffect(() => {
-
-        const title = document.title.split(' | ')
-        document.title = Object.keys(launch).length ? `${launch.name} | ${title[1]} ` : title.join(' | ')
-    
     }, [launch])
-
-    useEffect(() => processed && setPreloader(false), [processed])
-
-    console.log(launch)
 
     if(preloader) {
 
@@ -109,11 +43,10 @@ const Launch = () => {
         <>
             <section className='launch-opener'>
                 <div className='content-container'>
-                    <div ref={launchHighlightImage} className='launch-image-container shadow-long rounded'>
-                        <img className='launch-image shadow-long rounded' src={launch.links.flickr.original.length ? launch.links.flickr.original[0] : imagePlaceholder} alt={launch.name} />
+                    <div className='launch-image-container shadow-long rounded' style={backgroundImage.current}>
                         <img className='mission-patch rounded shadow' src={launch.links.patch.large} alt='Flight Patch'/>
                     </div>
-                    <div ref={launchHighlightContainer} className='launch-highlights-container'>
+                    <div className='launch-highlights-container'>
                         <h1 className='launch-title'>
                             <span className='flight-number'>{`#${launch.flight_number}:`}</span>
                             {launch.name}

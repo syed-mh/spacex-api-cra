@@ -196,10 +196,35 @@ const APIFetchEvents = class {
     /**
      * Process all data for producing the state for a launch page component tree
      * @private
+     * @param { String } LAUNCHID - ID of specific launch to be queried
      * @returns { Object } - processed state for launch page
      */
-    _processLaunchData = async () => {
-        
+    _processLaunchData = async (LAUNCHID) => {
+        try {
+            const _rawData = await this.get([LAUNCHID, 'launchpads', 'ships', 'rockets', 'crew', 'payloads'])
+            const _launch = {..._rawData[0]}
+            _launch.launchpad = _rawData[1].find(launchpad => {
+                return launchpad.id === _launch.launchpad
+            })
+            _launch.ships = _rawData[2].filter(ship => {
+                return _launch.ships.includes(ship.id)
+            })
+            _launch.fairings.ships = _rawData[2].filter(ship => {
+                return _launch.fairings.ships.includes(ship.id)
+            })
+            _launch.rocket = _rawData[3].find(rocket => {
+                return rocket.id === _launch.rocket
+            })
+            _launch.crew = _rawData[4].filter(crew => {
+                return _launch.crew.includes(crew.id)
+            })
+            _launch.payloads = _rawData[5].filter(payload => {
+                return _launch.payloads.includes(payload.id)
+            })
+            return _launch
+        } catch(error) {
+            throw new Error(error)
+        }
     }
     /**
      * Process all data for producing the state for the launchpads page component tree
@@ -207,9 +232,13 @@ const APIFetchEvents = class {
      * @returns { Array<Object> } - processed state for launchpads page
      */
     _processLaunchpadsData = async () => {
-        let _rawData = await this.get(['launches', 'launchpads'])
-        return {
-            launchpads: this._setLaunchesPerLaunchpad(_rawData[1], _rawData[0])
+        try {
+            let _rawData = await this.get(['launches', 'launchpads'])
+            return {
+                launchpads: this._setLaunchesPerLaunchpad(_rawData[1], _rawData[0])
+            }
+        } catch(error) {
+            throw new Error(error)
         }
     }
     /**
@@ -253,20 +282,20 @@ const APIFetchEvents = class {
         try {
             if(!SETTER) throw new Error(`No/invalid SETTER <Function> defined in <APIFetchEvents.set> params. SETTER received: ${SETTER}`)
             let data;
-            switch (RESOURCE) {
-                case 'home':
+            switch (true) {
+                case RESOURCE === 'home':
                     data = await this._processHomePageData()
                     break
-                case 'launches':
+                case RESOURCE === 'launches':
                     data = await this._processLaunchesData()
                     break
-                case 'launch':
-                    data = await this._processLaunchData()
+                case RESOURCE.includes('launches/'):
+                    data = await this._processLaunchData(RESOURCE)
                     break
-                case 'launchpads':
+                case RESOURCE === 'launchpads':
                     data = await this._processLaunchpadsData()
                     break
-                case 'launchpad':
+                case RESOURCE === 'launchpad':
                     data = await this._processLaunchpadData()
                     break
                 default:
