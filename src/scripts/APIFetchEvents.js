@@ -8,7 +8,7 @@ const APIFetchEvents = class {
 
     constructor (ENDPOINTS = null) {
         /**
-         * @property {{endpoint: String, reverse: Boolean}}
+         * @type {{endpoint: String, reverse: Boolean}}
          */
         this.endpoints = ENDPOINTS
     }
@@ -224,9 +224,9 @@ const APIFetchEvents = class {
             if(!Array.isArray(ENDPOINTS) && !ENDPOINTS.length) throw new Error(`No/invalid ENDPOINTS <Object> specified to <APIFetchEvents.get> params. ENDPOINTS received: ${ENDPOINTS}`)
             /**@type { Array<Object> } */
             const _responses = []
-            for(let _index = 0; _index < ENDPOINTS.length; _index++) {
+            for(const endpoint of ENDPOINTS) {
                 /** @type { Array<Object> | Object } */
-                let _response = await fetch(`${APIFetchEvents.APIUrl}/${ENDPOINTS[_index]['endpoint']}`)
+                let _response = await fetch(`${APIFetchEvents.APIUrl}/${endpoint}`)
                 _response = await _response.json()
                 _responses.push(_response)
             }
