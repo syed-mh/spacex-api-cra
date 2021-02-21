@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Preloader from '../components/Preloader'
 import APIFetchEvents from '../scripts/APIFetchEvents'
 import { Helmet } from 'react-helmet'
-
-const APIFetch = new APIFetchEvents()
 
 const Launchpads = () => {
 
     const [ launchpads, setLaunchpads ] = useState([])
     const [ preloader, setPreloader ] = useState(true)
+
+    const APIFetch = useRef(new APIFetchEvents())
 
     console.log(launchpads)
 
@@ -17,7 +17,7 @@ const Launchpads = () => {
     }, [launchpads])
 
     useEffect(() => {
-        APIFetch.set('launchpads', setLaunchpads)
+        APIFetch.current.set('launchpads', setLaunchpads)
     },[])
 
     if(preloader) {
