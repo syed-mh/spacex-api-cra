@@ -1,37 +1,35 @@
+/**
+ * Class to stand-in middleware to manage API fetch and data processing events
+ * @typedef { Object } APIFetchEvents
+ * @constructor
+ * @param { Array<String> | null} [ENDPOINTS] - Array of strings that correspond to API endpoints
+ */
 const APIFetchEvents = class {
-    /**
-     * @description Middleware for data fetched via the API. This class contains various methods for
-     * different data processing tasks, as well as functions to process data for different pages on the
-     * front-end.
-     * @name APIFetchEvents
-     * @constructor
-     * @access public
-     * @param { Array } ENDPOINTS @default {} - Array of objects containing endpoint (string) (mandatory) and return (boolean) (optional)
-     */
-    constructor (ENDPOINTS = {}) {
+
+    constructor (ENDPOINTS = null) {
+        /**
+         * @property {{endpoint: String, reverse: Boolean}}
+         */
         this.endpoints = ENDPOINTS
     }
     /**
-     * @description API Base URL
-     * @static
-     */
+    * @API Base URL
+    * @static
+    * @type { String }
+    */
     static APIUrl = 'https://api.spacexdata.com/v4'
     /**
-     * @description Function to sort resources by date.
-     * @method
-     * @function
-     * @access public
-     * @param { Array } RESOURCE @default [] - Unsorted array of resource objects. Default is [].
-     * @param { String } SORTBY @default 'date_utc' - String representation of object attribute to sort by. Default is 'date_utc'
-     * @param { String } ORDER @default 'asc' - Order to sort resources in 'asc' or 'desc'. Default is 'asc'.
-     * @returns { Array } Sorted resource.
+     * Sorts any provided array of resources by date
+     * @private
+     * @param { Array<Object> } RESOURCE - Resource to process
+     * @param { String } [SORTBY] - Define a key in each resource object to use as the reference for sorting data
+     * @param { String } [ORDER] - Define order direction
+     * @returns { Array<Object> } - Sorted resources
      */
     _sortResourcesByDate = (RESOURCE = [], SORTBY = 'date_utc', ORDER = 'asc') => {
         try {
-            return RESOURCE.sort((current, next) => {
-                // COMPARE NUMERICAL REPRESENTATION OF CURRENT AND NEXT VALUES
-                const _comparison = Number(new Date(current[SORTBY])) - Number(new Date(next[SORTBY]))
-                // RETURN COMPARISON OR INVERSE OF COMPARISON BASED ON ORDER
+            return RESOURCE.sort((_current, _next) => {
+                const _comparison = Number(new Date(_current[SORTBY])) - Number(new Date(_next[SORTBY]))
                 if(ORDER === 'asc') {
                     return -_comparison
                 } else {
@@ -43,35 +41,28 @@ const APIFetchEvents = class {
         }
     }
     /**
-     * @description Function to process launches and produce Analytics data
-     * @method
-     * @function
-     * @access private
-     * @param { Array } LAUNCHES @default [] - Array of past launches 
+     * Loop through launches to produce Analytics data for the home page
+     * @private
+     * @param { Array<Object> } LAUNCHES 
+     * @returns {{years: Array<Number>, successfulLaunchesByYear: Array<Object>, failedLaunchesByYear: Array<Object> }}
      */
     _setAnalyticsData = (LAUNCHES = []) => {
         try {
-            // INITIALIZE BAREBONES OBJECT TO POPULATE WITH ANALYTICS DATA
+            /** @type { Object } */
             const _data = {
                 years: [],
                 successfulLaunchesByYear: {},
                 failedLaunchesByYear: {}
             }
-            // LOOP THROUGH LAUNCHES TO FIND AND PLACE DATA ACCORDINGLY
             LAUNCHES.forEach(_launch => {
-                // SET UP LAUNCH YEAR TO POPULATE DATA FOR FRONT-END GRAPH
                 const _launchYear = new Date(_launch.date_utc).getFullYear()
-                // PREPEND YEAR INTO THE ARRAY OF ALL YEARS IF IT DOESN'T EXIST IN THE ARRAY
                 if(!_data.years.includes(_launchYear)) _data.years.unshift(_launchYear)
-                // INITIALIZE YEARLY SUCCESSES BY ZERO IF THE YEAR DOES NOT ALREADY EXIST
                 if(!_data.successfulLaunchesByYear[_launchYear]) _data.successfulLaunchesByYear[_launchYear] = 0
-                // INITIALIZE YEARLY FAILURES BY ZERO IF THE YEAR DOES NOT ALREADY EXIST
                 if(!_data.failedLaunchesByYear[_launchYear]) _data.failedLaunchesByYear[_launchYear] = 0
-                // INCREMENT YEARLY SUCCESSES/FAILURES AND TOTAL SUCCESSES/FAILURES BASED ON LAUNCH DATA
                 if(_launch.success) {
                     _data.successfulLaunchesByYear[_launchYear]++
-                } else if(_launch.success) {
-                    _data.successfulLaunchesByYear[_launchYear]++
+                } else if(_launch.success === false) {
+                    _data.failedLaunchesByYear[_launchYear]++
                 }
             })
             return _data
@@ -80,18 +71,15 @@ const APIFetchEvents = class {
         }
     }
     /**
-     * @description Append a google maps link to each launch by identifying the launchpad
-     * @method
-     * @function
-     * @access private
-     * @param { Array } LAUNCHES @default [] - Original array of launches.
-     * @param { Array } LAUNCHPADS @default [] - Original array of launchpads
-     * @returns { Array } Array of launches with Launchpad Google Maps QueryString appended
+     * Replaced Launchpad ID with corresponding Launchpad Object on any given array of launches
+     * @private
+     * @param { Array<Object> } LAUNCHES - Launches to process
+     * @param { Array<Object> } LAUNCHPADS - Array of all launchpads
+     * @returns { Array<Object> } - Launches containing launchpad objects
      */
     _setLaunchpadPerLaunch = (LAUNCHES = [], LAUNCHPADS = []) => {
         try {
-            const _launches = [...LAUNCHES]
-            _launches.forEach(launch => {
+            LAUNCHES.forEach(launch => {
                 for (const launchpad of LAUNCHPADS) {
                     if(launch.launchpad === launchpad.id) {
                         launch.links.google_maps = `https://www.google.com/maps/search/?api=1&query=${launchpad.full_name.toLowerCase().split(' ').join('+')}`
@@ -99,139 +87,189 @@ const APIFetchEvents = class {
                     }
                 }
             })
-            return _launches
+            return LAUNCHES
         } catch(error) {
             throw new Error(error)
         }
     }
     /**
-     * @description Function to process data for setting the state of the home page.
-     * @method
-     * @function
-     * @access private
-     * @returns { Object } Processed object containing all data.
+     * Removes properties from Launch Object that are not needed to display a launch card
+     * @private
+     * @param { Object } LAUNCH - Launch Object to process
+     * @returns { Object } - Processed launch Object
      */
-     _processHomePageData = async () => {
-        try {
-            let _rawData = await this.get([
-                 {endpoint: 'launches/next'},
-                 {endpoint: 'launches/past',reverse: true},
-                 {endpoint: 'history', reverse: true},
-                 {endpoint: 'launchpads'}])
-             return {
-                 nextLaunch: _rawData[0],
-                 analytics: this._setAnalyticsData(_rawData[1]),
-                 pastLaunches: this._setLaunchpadPerLaunch(this._sortResourcesByDate(_rawData[1], 'date_utc').slice(0, 3), _rawData[3]),
-                 breakthroughs: this._sortResourcesByDate(_rawData[2], 'event_date_utc').slice(0, 4)
+    _processLaunchCard = (LAUNCH = {}) => {
+        let { id, name, links, success, date_utc, details, launchpad } = LAUNCH
+        const _launch = {}
+        
+        /** @type { Number } */
+        _launch.id = id
+        /** @type { String } */
+        _launch.name = name
+        /** @type { String } */
+        _launch.details = details
+        /** @type { String } */
+        _launch.date_utc = new Date(date_utc).toLocaleDateString('en', {day: 'numeric', month: 'short', year: 'numeric', hour:'numeric', minute: 'numeric', second: 'numeric'})
+        /** @type { Boolean | Null } */
+        _launch.success = success
+        /** @type { String } */
+        _launch.launchpad = launchpad
+        /** @type { Object | Null } */
+        _launch.links = {}
+
+        if(links.article) _launch.links.article = links.article
+        for(const redditLink in links.reddit) {
+            if(redditLink) {
+                _launch.links.reddit = redditLink
+                break
             }
+        }
+        if(links.webcast) _launch.links.webcast = links.webcast
+        if(links.wikipedia) _launch.links.wikipedia = links.wikipedia
+        if(!Object.keys(_launch.links)) _launch.links = null
+        
+        return _launch
+
+    }
+    /**
+     * Replace launch IDs in launchpad object with corresponding launch Objects
+     * @private
+     * @param { Array<Object> } LAUNCHPADS - Array of Launchpads
+     * @param { Array<Object> } LAUNCHES - All launches
+     */
+    _setLaunchesPerLaunchpad = (LAUNCHPADS = [], LAUNCHES = []) => {
+        try {
+            return LAUNCHPADS.map(launchpad => {
+                LAUNCHES.forEach(launch => {
+                    if(launchpad.launches.indexOf(launch.id) >= 0) {
+                        launchpad.launches[launchpad.launches.indexOf(launch.id)] = launch
+                    }
+                })
+                launchpad.launches = this._sortResourcesByDate(launchpad.launches, 'date_utc', 'asc')
+                return launchpad
+            })
         } catch(error) {
             throw new Error(error)
         }
-     }
-     /**
-     * @description Function to process data for setting the state of the launches page.
-     * @method
-     * @function
-     * @access private
-     * @returns { Object } Processed object containing all data.
+    }
+    /**
+     * Process all data for producing a state for the home page component tree
+     * @private
+     * @returns {{ nextLaunch: Object, analytics: Object, pastLaunches: Array<Object>, breakthroughs: Object }} - processed state data
      */
-     _processLaunchesData = async () => {
+    _processHomePageData = async () => {
         try {
-            let _rawData = await this.get([
-                {endpoint: 'launches', reverse: true},
-                {endpoint: 'launchpads'}])
-             return {
-                 launches: this._setLaunchpadPerLaunch(this._sortResourcesByDate(_rawData[0], 'date_utc'), _rawData[1]),
-            }
-        } catch(error) {
-            throw new Error(error)
-        }
-     }
-     _processLaunch = () => {
-
-     }
-     _processLaunchpads = () => {
-
-     }
-     /**
-     * @description Initiate fetch requests with a method of "GET" based on provided [{ENDPOINTS}].
-     * @method
-     * @function
-     * @access public
-     * @param { Array } ENDPOINTS @default [] - an array of objects with endpoints {string} (mandatory) and reverse {boolean} (optional).
-     * @returns { Promise } Promise containing all the data fetched from the API.
-     */
-    get = async (ENDPOINTS = []) => {
-        try {
-            if(Array.isArray(ENDPOINTS) && ENDPOINTS.length) {
-                // INITIALIZE EMPTY ARRAY FOR RESULTS OF ALL FETCH REQUESTS
-                const _responses = []
-                // LOOP OVER ENDPOINTS TO MAKE FETCH REQUESTS
-                for(let _index = 0; _index < ENDPOINTS.length; _index++) {
-                    // MAKE THE FETCH REQUEST
-                    let _response = await fetch(`${APIFetchEvents.APIUrl}/${ENDPOINTS[_index]['endpoint']}`)
-                    // CONVERT THE RESPONSE TO JSON
-                    _response = await _response.json()
-                    // REVERSE THE DATA RECEIVED IF THE INPUT REQUESTS IT
-                    _response = ENDPOINTS[_index].reverse ? _response.reverse() : _response
-                    // PUSH RESPONSE TO 
-                    _responses.push(_response)
-                }
-                // RETURN REQUEST RESULTS
-                return _responses
-            } else {
-                throw new Error('No/invalid endpoints specified to APIFetchEvents.get')
+            /**@type { Array<Object> } */
+            const _rawData = await this.get(['launches/next', 'launches/past', 'history', 'launchpads'])
+            return {
+                nextLaunch: _rawData[0],
+                analytics: this._setAnalyticsData(_rawData[1]),
+                pastLaunches: this._setLaunchpadPerLaunch(this._sortResourcesByDate(_rawData[1], 'date_utc').slice(0, 3), _rawData[3]),
+                breakthroughs: this._sortResourcesByDate(_rawData[2], 'event_date_utc').slice(0, 4)
             }
         } catch(error) {
             throw new Error(error)
         }
     }
     /**
-     * @description Fetch , process and output data for Home Page based on pre-defined functions in the class.
-     * @method
-     * @function
-     * @access public
-     * @param { String } RESOURCE @default '' - String representation of one of the pre-determined views. If no view is supplied.
-     * @param { Function } SETTER @default null - setState function to be used by the front-end to set current component state 
-     * @returns { Boolean } - Returns true if data was received, otherwise it returns false
+     * Process all data for producing the DATA state for the launches page component tree
+     * @private
+     * @returns { Array<Object> } - processed DATA state for launches page
+     */
+    _processLaunchesData = async () => {
+        try {
+            let _rawData = await this.get(['launches', 'launchpads'])
+            return {
+                launches: this._setLaunchpadPerLaunch(this._sortResourcesByDate(_rawData[0]), _rawData[1]),
+            }
+        } catch(error) {
+            throw new Error(error)
+        }
+    }
+    /**
+     * Process all data for producing the state for a launch page component tree
+     * @private
+     * @returns { Object } - processed state for launch page
+     */
+    _processLaunchData = async () => {
+        
+    }
+    /**
+     * Process all data for producing the state for the launchpads page component tree
+     * @private
+     * @returns { Array<Object> } - processed state for launchpads page
+     */
+    _processLaunchpadsData = async () => {
+        let _rawData = await this.get(['launches', 'launchpads'])
+        return {
+            launchpads: this._setLaunchesPerLaunchpad(_rawData[1], _rawData[0])
+        }
+    }
+    /**
+     * Process all data for producing the state for a launchpad page component tree
+     * @private
+     * @returns { Object } - processed state for launchpad page
+     */
+    _processLaunchpadData = () => {
+
+    }
+    /**
+     * Make fetch requests for one or multiple endpoints and send back results
+     * @public
+     * @param { Array<String> } [ENDPOINTS] - Array of strings that correspond to API endpoints
+     * @returns { Array<Object> | Object } - Fetched resource response
+     */
+    get = async (ENDPOINTS = this.ENDPOINTS) => {
+        try {
+            if(!Array.isArray(ENDPOINTS) && !ENDPOINTS.length) throw new Error(`No/invalid ENDPOINTS <Object> specified to <APIFetchEvents.get> params. ENDPOINTS received: ${ENDPOINTS}`)
+            /**@type { Array<Object> } */
+            const _responses = []
+            for(let _index = 0; _index < ENDPOINTS.length; _index++) {
+                /** @type { Array<Object> | Object } */
+                let _response = await fetch(`${APIFetchEvents.APIUrl}/${ENDPOINTS[_index]['endpoint']}`)
+                _response = await _response.json()
+                _responses.push(_response)
+            }
+            return _responses
+        } catch(error) {
+            throw new Error(error)
+        }
+    }
+    /**
+     * External interface to request one of several pre-programmed resources and assign them to appropriate states
+     * @public
+     * @param { String } RESOURCE - name of resource
+     * @param { Function } SETTER - function to set state in the front-end
+     * @returns { Void }
      */
     set = async (RESOURCE = '', SETTER = null) => {
         try {
-            if(SETTER) {
-                let data;
-                switch (RESOURCE) {
-                    case 'home':
-                        data = await this._processHomePageData()
-                        break
-                    case 'launches':
-                        data = await this._processLaunchesData()
-                        break
-                    case 'launch':
-                        data = await this._processLaunch()
-                        break
-                    case 'launchpads':
-                        data = await this._processLaunchpads()
-                        break
-                    case 'launchpad':
-                        data = await this._processLaunchpad()
-                        break
-                    default:
-                        data = null
-                        break
-                    }
-                    if(data) {
-                        await SETTER(data)
-                        return true
-                    } else {
-                        return false
-                    }
-                } else {
-                    throw new Error('Setter not defined in APIFetchEvents.set')
-                }
+            if(!SETTER) throw new Error(`No/invalid SETTER <Function> defined in <APIFetchEvents.set> params. SETTER received: ${SETTER}`)
+            let data;
+            switch (RESOURCE) {
+                case 'home':
+                    data = await this._processHomePageData()
+                    break
+                case 'launches':
+                    data = await this._processLaunchesData()
+                    break
+                case 'launch':
+                    data = await this._processLaunchData()
+                    break
+                case 'launchpads':
+                    data = await this._processLaunchpadsData()
+                    break
+                case 'launchpad':
+                    data = await this._processLaunchpadData()
+                    break
+                default:
+                    data = null
+                    break
+            }
+            await SETTER(data)
         } catch(error) {
             throw new Error(error)
         }
     }
 }
-
 export default APIFetchEvents

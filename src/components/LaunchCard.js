@@ -4,10 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { NavLink } from 'react-router-dom'
 
 import Button from './Button'
-// import articleLogo from '../images/article.png'
-// import wikipediaLogo from '../images/wikipedia.png'
-// import redditLogo from '../images/reddit.png'
-// import youtubeLogo from '../images/youtube.png'
 
 const LaunchCard = (props) => {
 

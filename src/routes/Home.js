@@ -20,8 +20,6 @@ const Home = () => {
     const [ data, setData ] = useState({})
     const [ preloader, setPreloader ] = useState(true)
 
-    console.log(data)
-
     useEffect(() => {
 
         APIFetch.set('home', setData)
