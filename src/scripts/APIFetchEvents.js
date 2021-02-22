@@ -23,8 +23,9 @@ const APIFetchEvents = class {
      * @param { String } [ORDER] - Define order direction
      * @returns { Array<Object> } - Sorted resources
      */
-    _sortResourcesByDate = (RESOURCE = [], SORTBY = 'date_utc', ORDER = 'asc') => {
+    _sortResourcesByDate = (RESOURCE, SORTBY = 'date_utc', ORDER = 'asc') => {
         try {
+            if(!RESOURCE || !Object.keys(RESOURCE).length) throw new Error('No/invalid arguments provided to <APIFetchEvents._sortResourcesByDate>')
             return RESOURCE.sort((_current, _next) => {
                 const _comparison = Number(new Date(_current[SORTBY])) - Number(new Date(_next[SORTBY]))
                 if(ORDER === 'asc') {
@@ -43,9 +44,9 @@ const APIFetchEvents = class {
      * @param { Array<Object> } LAUNCHES 
      * @returns {{years: Array<Number>, successfulLaunchesByYear: {year: number}, failedLaunchesByYear: {year: number} }}
      */
-    _setAnalyticsData = (LAUNCHES = []) => {
+    _setAnalyticsData = (LAUNCHES) => {
         try {
-            /** @type { Object } */
+            if(!LAUNCHES.length || !Array.isArray(LAUNCHES)) throw new Error('No/invalid arguments provided to <APIFetchEvents._setAnalyticsData>')
             const _data = {
                 years: [],
                 successfulLaunchesByYear: {},
@@ -74,8 +75,9 @@ const APIFetchEvents = class {
      * @param { Array<Object> } LAUNCHPADS - Array of all launchpads
      * @returns { Array<Object> } - Launches containing launchpad objects
      */
-    _setLaunchpadPerLaunch = (LAUNCHES = [], LAUNCHPADS = []) => {
+    _setLaunchpadPerLaunch = (LAUNCHES, LAUNCHPADS) => {
         try {
+            if((!LAUNCHPADS || !LAUNCHPADS.length) || (!LAUNCHES || !LAUNCHES.length)) throw new Error('No/invalid arguments provided to <APIFetchEvents._setLaunchesPerLaunchpad>')
             LAUNCHES.forEach(launch => {
                 for (const launchpad of LAUNCHPADS) {
                     if(launch.launchpad === launchpad.id) {
@@ -93,25 +95,20 @@ const APIFetchEvents = class {
      * Removes properties from Launch Object that are not needed to display a launch card
      * @private
      * @param { Object } LAUNCH - Launch Object to process
-     * @returns { Object } - Processed launch Object
+     * @returns { {id: number, name: string, details: string, success: boolean | null, launcpad: object, links: object | null, featuredImage: string | null, patch: string | null} } - Processed launch Object
      */
-    _processLaunchCard = (LAUNCH = {}) => {
+    _processLaunchCard = (LAUNCH) => {
         try {
+            if(!LAUNCH || !Object.keys(LAUNCH).length) throw new Error('No/invalid Launch Object provided to <APIFetchEvents._processLaunchCard>')
             const { id, name, links, success, date_utc, details, launchpad } = LAUNCH
-            const _launch = {}   
-            /** @type { Number } */
+            const _launch = {}
+
             _launch.id = id
-            /** @type { String } */
             _launch.name = name
-            /** @type { String } */
             _launch.details = details
-            /** @type { String } */
             _launch.date_utc = new Date(date_utc).toLocaleDateString('en', {day: 'numeric', month: 'short', year: 'numeric', hour:'numeric', minute: 'numeric', second: 'numeric'})
-            /** @type { Boolean | Null } */
             _launch.success = success
-            /** @type { String } */
             _launch.launchpad = launchpad
-            /** @type { Object | Null } */
             _launch.links = {}
     
             if(links.article) _launch.links.article = links.article
@@ -123,11 +120,12 @@ const APIFetchEvents = class {
             }
             if(links.webcast) _launch.links.webcast = links.webcast
             if(links.wikipedia) _launch.links.wikipedia = links.wikipedia
-            if(links.flickr.original.length) _launch.featuredImage = links.flickr.original[0]
-            _launch.patch = links.patch.large
+            _launch.featuredImage = links.flickr.original.length ? links.flickr.original[0] : null
+            _launch.patch = links.patch.large ? links.patch.large: null
             if(!Object.keys(_launch.links)) _launch.links = null
             
             return _launch
+
         } catch(error) {
             throw new Error(error)
         }
@@ -139,8 +137,9 @@ const APIFetchEvents = class {
      * @param { Array<Object> } LAUNCHPADS - Array of Launchpads
      * @param { Array<Object> } LAUNCHES - All launches
      */
-    _setLaunchesPerLaunchpad = (LAUNCHPADS = [], LAUNCHES = []) => {
+    _setLaunchesPerLaunchpad = (LAUNCHPADS, LAUNCHES) => {
         try {
+            if((!LAUNCHPADS || !LAUNCHPADS.length) || (!LAUNCHES || !LAUNCHES.length)) throw new Error('No/invalid arguments provided to <APIFetchEvents._setLaunchesPerLaunchpad>')
             return LAUNCHPADS.map(launchpad => {
                 LAUNCHES.forEach(launch => {
                     if(launchpad.launches.indexOf(launch.id) >= 0) {
@@ -204,6 +203,7 @@ const APIFetchEvents = class {
      */
     _processLaunchData = async (LAUNCHID) => {
         try {
+            if(!LAUNCHID || typeof LAUNCHID !== 'string') throw new Error('No/invalid LAUNCHID provided to <APIFetchEvents._processLaunchData>')
             const _rawData = await this.get([LAUNCHID, 'launchpads', 'ships', 'rockets', 'crew', 'payloads'])
             const _launch = {..._rawData[0]}
             _launch.launchpad = _rawData[1].find(launchpad => {
