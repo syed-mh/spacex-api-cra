@@ -7,34 +7,26 @@ import Chart from "chart.js";
  * @param {{data: Object}} props
  * @returns {React.ReactElement}
  */
-const LaunchLineChart = ({ data }) => {
+const AnalyticsChart = ({ data }) => {
   const chartRef = useRef();
 
   useEffect(() => {
     const myChartRef = chartRef.current.getContext("2d");
 
     new Chart(myChartRef, {
-      type: "line",
+      type: "bar",
       data: {
         labels: data.years,
         datasets: [
           {
-            label: "Successful Launches",
-            data: Object.values(data.successfulLaunchesByYear),
-            fill: false,
-            borderColor: "#3d4ec7",
-            lineTension: 0.3,
-            borderWidth: 1,
-            pointBorderWidth: 5,
-          },
-          {
             label: "Failed Launches",
             data: Object.values(data.failedLaunchesByYear),
-            fill: false,
-            borderColor: "#f66916",
-            lineTension: 0.3,
-            borderWidth: 1,
-            pointBorderWidth: 5,
+            backgroundColor: "#f66916",
+          },
+          {
+            label: "Successful Launches",
+            data: Object.values(data.successfulLaunchesByYear),
+            backgroundColor: "#3d4ec7",
           },
         ],
       },
@@ -76,6 +68,7 @@ const LaunchLineChart = ({ data }) => {
                 fontColor: "#47415c",
                 fontFamily: "Manrope, sans-serif",
               },
+              stacked: true,
             },
           ],
           yAxes: [
@@ -90,6 +83,7 @@ const LaunchLineChart = ({ data }) => {
                 fontColor: "#47415c",
                 fontFamily: "Manrope, sans-serif",
               },
+              stacked: true,
             },
           ],
         },
@@ -109,4 +103,4 @@ const LaunchLineChart = ({ data }) => {
   );
 };
 
-export default LaunchLineChart;
+export default AnalyticsChart;

@@ -7,7 +7,7 @@ import BreakthroughCard from "../components/BreakthroughCard";
 import Button from "../components/Button";
 import Countdown from "../components/Countdown";
 import LaunchCard from "../components/LaunchCard";
-import LaunchLineChart from "../components/LaunchLineChart";
+import AnalyticsChart from "../components/AnalyticsChart";
 import Preloader from "../components/Preloader";
 import SectionTitle from "../components/SectionTitle";
 
@@ -86,7 +86,7 @@ const Home = () => {
         <section className="stats page-section">
           <SectionTitle>Launch History</SectionTitle>
           <div className="content-container narrow">
-            <LaunchLineChart data={data.analytics} />
+            <AnalyticsChart data={data.analytics} />
           </div>
         </section>
         <section className="breakthroughs page-section">
