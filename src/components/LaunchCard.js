@@ -3,6 +3,12 @@ import imagePlaceholder from "../images/placeholder.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
+/**
+ * Renders a card displaying highlights about a launch
+ * @component
+ * @param { {launch: Object} } props
+ * @returns {React.ReactElement}
+ */
 const LaunchCard = ({ launch }) => {
   return (
     <article className="card-container">

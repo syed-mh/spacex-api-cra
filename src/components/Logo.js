@@ -1,5 +1,10 @@
 import React from "react";
 
+/**
+ * Website logo
+ * @component
+ * @returns {React.ReactElement}
+ */
 const Logo = () => {
   return (
     <div className="logo">

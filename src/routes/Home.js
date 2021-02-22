@@ -14,6 +14,11 @@ import SectionTitle from "../components/SectionTitle";
 // IMPORT API FETCH CLASS
 import APIFetchEvents from "../scripts/APIFetchEvents";
 
+/**
+ * Container component for Home Page
+ * @component
+ * @returns {React.ReactElement}
+ */
 const Home = () => {
   const [data, setData] = useState({});
   const [preloader, setPreloader] = useState(true);

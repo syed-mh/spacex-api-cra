@@ -1,5 +1,10 @@
 import React from "react";
 
+/**
+ * Renders footer across the website
+ * @component
+ * @returns {React.ReactElement}
+ */
 const Footer = () => {
   return (
     <footer className="website-footer">

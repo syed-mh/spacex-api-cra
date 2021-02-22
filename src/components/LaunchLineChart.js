@@ -1,6 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import Chart from "chart.js";
 
+/**
+ * Renders analysis chart for home page
+ * @component
+ * @param {{data: Object}} props
+ * @returns {React.ReactElement}
+ */
 const LaunchLineChart = ({ data }) => {
   const chartRef = useRef();
 

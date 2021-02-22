@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import CountdownSegment from "./CountdownSegment";
 
+/**
+ * Countdown element for the home page
+ * @component
+ * @param { {date: String} } props
+ * @returns {React.ReactElement}
+ */
 const Countdown = ({ date }) => {
   const [countdown, setCountdown] = useState(null);
 

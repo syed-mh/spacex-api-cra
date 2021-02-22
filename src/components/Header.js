@@ -6,6 +6,11 @@ import Button from "./Button";
 import MenuItem from "./MenuItem";
 import Logo from "./Logo";
 
+/**
+ * Renders header across the website
+ * @component
+ * @returns {React.ReactElement}
+ */
 const Header = () => {
   const mobileNav = useRef();
   const menuOpen = useRef();

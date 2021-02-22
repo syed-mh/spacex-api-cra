@@ -1,5 +1,11 @@
 import React from "react";
 
+/**
+ * Wrapper for Countdown component on Home Page, but can also be used for other generic banners across the website
+ * @component
+ * @param {{title: String, subtitle: String, additionalInformation: String, children: any}} props
+ * @returns {React.ReactElement}
+ */
 const Banner = ({ title, subtitle, additionalInformation, children }) => {
   return (
     <div className="banner rounded-large shadow">

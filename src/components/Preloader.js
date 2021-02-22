@@ -1,5 +1,10 @@
 import React from "react";
 
+/**
+ * Global preloader component
+ * @component
+ * @returns {React.ReactElement}
+ */
 const Preloader = () => {
   return (
     <div id="preloader">

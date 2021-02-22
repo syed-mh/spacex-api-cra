@@ -3,6 +3,11 @@ import Preloader from "../components/Preloader";
 import APIFetchEvents from "../scripts/APIFetchEvents";
 import { Helmet } from "react-helmet";
 
+/**
+ * Container component for Launchpads Page
+ * @component
+ * @returns {React.ReactElement}
+ */
 const Launchpads = () => {
   const [launchpads, setLaunchpads] = useState([]);
   const [preloader, setPreloader] = useState(true);

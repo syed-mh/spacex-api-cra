@@ -5,6 +5,11 @@ import LaunchCard from "../components/LaunchCard";
 import APIFetchEvents from "../scripts/APIFetchEvents";
 import { Helmet } from "react-helmet";
 
+/**
+ * Container component for Launches Page
+ * @component
+ * @returns {React.ReactElement}
+ */
 const Launches = () => {
   const [data, setData] = useState({});
   const [preloader, setPreloader] = useState(true);

@@ -1,5 +1,11 @@
 import React from "react";
 
+/**
+ * Individual countdown element inside Countdown component
+ * @component
+ * @param {{name: String, value: String | Number}} props
+ * @returns {React.ReactElement}
+ */
 const CountdownSegment = ({ name, value }) => {
   return (
     <span className={`${name.toLowerCase()} countdown-segment`}>

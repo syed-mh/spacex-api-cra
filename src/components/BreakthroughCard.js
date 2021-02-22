@@ -1,7 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
-const breakthroughCard = ({ number, cardDetails }) => {
+/**
+ * Renders breakthrough card on Home Page
+ * @component
+ * @param {{number: number, cardDetails: Object}} props
+ * @returns {React.ReactElement}
+ */
+const BreakthroughCard = ({ number, cardDetails }) => {
   return (
     <article className="breakthrough-card">
       <div className="card-content rounded shadow">
@@ -33,4 +39,4 @@ const breakthroughCard = ({ number, cardDetails }) => {
   );
 };
 
-export default breakthroughCard;
+export default BreakthroughCard;

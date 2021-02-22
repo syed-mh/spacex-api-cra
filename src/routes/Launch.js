@@ -7,6 +7,11 @@ import APIFetchEvents from "../scripts/APIFetchEvents";
 
 import imagePlaceholder from "../images/placeholder.png";
 
+/**
+ * Container component for individual Launch Page
+ * @component
+ * @returns {React.ReactElement}
+ */
 const Launch = () => {
   const [launch, setLaunch] = useState({});
   const [preloader, setPreloader] = useState(true);
