@@ -3,8 +3,6 @@ import imagePlaceholder from '../images/placeholder.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router-dom'
 
-import Button from './Button'
-
 const LaunchCard = (props) => {
     return (
         <article className='card-container' >
