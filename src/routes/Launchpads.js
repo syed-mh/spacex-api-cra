@@ -1,41 +1,38 @@
-import React, { useEffect, useRef, useState } from 'react'
-import Preloader from '../components/Preloader'
-import APIFetchEvents from '../scripts/APIFetchEvents'
-import { Helmet } from 'react-helmet'
+import React, { useEffect, useRef, useState } from "react";
+import Preloader from "../components/Preloader";
+import APIFetchEvents from "../scripts/APIFetchEvents";
+import { Helmet } from "react-helmet";
 
 const Launchpads = () => {
+  const [launchpads, setLaunchpads] = useState([]);
+  const [preloader, setPreloader] = useState(true);
 
-    const [ launchpads, setLaunchpads ] = useState([])
-    const [ preloader, setPreloader ] = useState(true)
+  const APIFetch = useRef(new APIFetchEvents());
 
-    const APIFetch = useRef(new APIFetchEvents())
+  console.log(launchpads);
 
-    console.log(launchpads)
+  useEffect(() => {
+    launchpads.length && setPreloader(false);
+  }, [launchpads]);
 
-    useEffect(() => {
-        launchpads.length && setPreloader(false)
-    }, [launchpads])
+  useEffect(() => {
+    APIFetch.current.set("launchpads", setLaunchpads);
+  }, []);
 
-    useEffect(() => {
-        APIFetch.current.set('launchpads', setLaunchpads)
-    },[])
+  if (preloader) {
+    return <Preloader />;
+  } else {
+    return (
+      <>
+        <Helmet>
+          <title>Launchpads | SpaceX Data Aggregation by Syed MH</title>
+        </Helmet>
+        <div>
+          <pre>{JSON.stringify(launchpads, null, 4)}</pre>
+        </div>
+      </>
+    );
+  }
+};
 
-    if(preloader) {
-        return <Preloader />
-    } else {
-        return (
-            <>
-                <Helmet>
-                    <title>Launchpads | SpaceX Data Aggregation by Syed MH</title>
-                </Helmet>
-                <div>
-                    <pre>
-                        {JSON.stringify(launchpads, null, 4)}
-                    </pre>
-                </div>
-            </>
-        )
-    }
-}
-
-export default Launchpads
+export default Launchpads;

@@ -1,53 +1,108 @@
-import React from 'react'
-import imagePlaceholder from '../images/placeholder.png'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Link } from 'react-router-dom'
+import React from "react";
+import imagePlaceholder from "../images/placeholder.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
 
-const LaunchCard = (props) => {
-    return (
-        <article className='card-container' >
-            <main className='card rounded-large shadow'>
-                <div className='card-image'>
-                    <img className='rounded launch-photo' src={props.launch.featuredImage ? props.launch.featuredImage : imagePlaceholder} alt={props.launch.name}/>
-                    <span className='mission-patch-container rounded shadow'>
-                        <img className='mission-patch' src={props.launch.patch} alt='Mission Patch' />
-                    </span>
-                    <span className={`mission-status ${props.launch.success === null ? '' : props.launch.success ? 'success' : 'failure'} rounded shadow`}>
-                        <p>{
-                            props.launch.success === null
-                            ? 'Unconfirmed'
-                            : props.launch.success
-                                ? 'Success'
-                                : 'Failure'}</p>
-                    </span>
-                </div>
-                <Link to={`/launches/${props.launch.id}`}>
-                    <h3 className='card-title'>{props.launch.name}</h3>
-                </Link>
-                <h6 className='card-date'>{props.launch.date_utc}</h6>
-                {
-                    props.launch.links &&
-                        <div className='external-links'>
-                        <span>External Links:</span>
-                            {props.launch.links.google_maps && <a href={props.launch.links.google_maps} target='_blank' rel='noreferrer noopener'><FontAwesomeIcon icon={['fas','map-marker-alt' ]} /></a>}
-                            {props.launch.links.article && <a href={props.launch.links.article} target='_blank' rel='noreferrer noopener'><FontAwesomeIcon icon={['fas', 'newspaper']} /></a>}
-                            {props.launch.links.reddit && <a href={props.launch.links.reddit} target='_blank' rel='noreferrer noopener'><FontAwesomeIcon icon={['fab', 'reddit-alien']} /></a>}
-                            {props.launch.links.webcast && <a href={props.launch.links.webcast} target='_blank' rel='noreferrer noopener'><FontAwesomeIcon icon={['fab', 'youtube']} /></a>}
-                            {props.launch.links.wikipedia && <a href={props.launch.links.wikipedia} target='_blank' rel='noreferrer noopener'><FontAwesomeIcon icon={['fab', 'wikipedia-w']} /></a>}
-                        </div>
-                }
-                {props.launch.details &&
-                    <span className='card-details'>{props.launch.details}</span>
-                }
-                {!(props.launch.success === null) &&
-                    <span className='view-launch-button rounded shadow-long'>
-                        <Link to={`/launches/${props.launch.id}`}>View Launch</Link>
-                    </span>
-                }
-            </main>
-        </article>
-    )
+const LaunchCard = ({ launch }) => {
+  return (
+    <article className="card-container">
+      <main className="card rounded-large shadow">
+        <div className="card-image">
+          <img
+            className="rounded launch-photo"
+            src={launch.featuredImage ? launch.featuredImage : imagePlaceholder}
+            alt={launch.name}
+          />
+          <span className="mission-patch-container rounded shadow">
+            <img
+              className="mission-patch"
+              src={launch.patch}
+              alt="Mission Patch"
+            />
+          </span>
+          <span
+            className={`mission-status ${
+              launch.success === null
+                ? ""
+                : launch.success
+                ? "success"
+                : "failure"
+            } rounded shadow`}
+          >
+            <p>
+              {launch.success === null
+                ? "Unconfirmed"
+                : launch.success
+                ? "Success"
+                : "Failure"}
+            </p>
+          </span>
+        </div>
+        <Link to={`/launches/${launch.id}`}>
+          <h3 className="card-title">{launch.name}</h3>
+        </Link>
+        <h6 className="card-date">{launch.date_utc}</h6>
+        {launch.links && (
+          <div className="external-links">
+            <span>External Links:</span>
+            {launch.links.google_maps && (
+              <a
+                href={launch.links.google_maps}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <FontAwesomeIcon icon={["fas", "map-marker-alt"]} />
+              </a>
+            )}
+            {launch.links.article && (
+              <a
+                href={launch.links.article}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <FontAwesomeIcon icon={["fas", "newspaper"]} />
+              </a>
+            )}
+            {launch.links.reddit && (
+              <a
+                href={launch.links.reddit}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <FontAwesomeIcon icon={["fab", "reddit-alien"]} />
+              </a>
+            )}
+            {launch.links.webcast && (
+              <a
+                href={launch.links.webcast}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <FontAwesomeIcon icon={["fab", "youtube"]} />
+              </a>
+            )}
+            {launch.links.wikipedia && (
+              <a
+                href={launch.links.wikipedia}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <FontAwesomeIcon icon={["fab", "wikipedia-w"]} />
+              </a>
+            )}
+          </div>
+        )}
+        {launch.details && (
+          <span className="card-details">{launch.details}</span>
+        )}
+        {!(launch.success === null) && (
+          <span className="view-launch-button rounded shadow-long">
+            <Link to={`/launches/${launch.id}`}>View Launch</Link>
+          </span>
+        )}
+      </main>
+    </article>
+  );
+};
 
-}
-
-export default LaunchCard
+export default LaunchCard;

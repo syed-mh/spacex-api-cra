@@ -1,14 +1,16 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import React from "react";
+import { NavLink } from "react-router-dom";
 
-const MenuItem = (props) => {
-    return(
-        props.exact
-            ?
-            <NavLink exact to={props.to} className={props.className} activeClassName='active'>{props.children}</NavLink>
-            :
-            <NavLink to={props.to} className={props.className} activeClassName='active'>{props.children}</NavLink>
-    )
-}
+const MenuItem = ({ exact, to, className, children }) => {
+  return exact ? (
+    <NavLink exact to={to} className={className} activeClassName="active">
+      {children}
+    </NavLink>
+  ) : (
+    <NavLink to={to} className={className} activeClassName="active">
+      {children}
+    </NavLink>
+  );
+};
 
-export default MenuItem
+export default MenuItem;
