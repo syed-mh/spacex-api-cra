@@ -1,3 +1,8 @@
+/**
+ * Calculates days, hours, minutes and seconds left to any given point in time in the future
+ * @param { String } DATE - date string in ISO format
+ * @returns { {days: Number, hours: Number, minutes: Number, seconds: Number} }
+ */
 export const calculateCountdown = (DATE) => {
   if (!DATE || isNaN(new Date(DATE).getTime()))
     throw new Error("No/Invalid date provided to <calculateCountdown>");
