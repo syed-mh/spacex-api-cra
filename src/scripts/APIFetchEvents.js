@@ -9,7 +9,7 @@ const APIFetchEvents = class {
     this.endpoints = ENDPOINTS;
   }
   /**
-   * @API Base URL
+   * API Base URL
    * @static
    * @type { String }
    */
