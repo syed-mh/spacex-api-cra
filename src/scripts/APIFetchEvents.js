@@ -242,14 +242,14 @@ const APIFetchEvents = class {
    * @param { String } LAUNCHID - ID of specific launch to be queried
    * @returns { Object } - processed state for launch page
    */
-  _processLaunchData = async (LAUNCHID) => {
-    if (!LAUNCHID || typeof LAUNCHID !== "string")
+  _processLaunchData = async (LAUNCHENDPOINT) => {
+    if (!LAUNCHENDPOINT || typeof LAUNCHENDPOINT !== "string")
       throw new Error(
         "No/invalid LAUNCHID provided to <APIFetchEvents._processLaunchData>"
       );
     try {
       const _rawData = await this.get([
-        LAUNCHID,
+        LAUNCHENDPOINT,
         "launchpads",
         "ships",
         "rockets",
