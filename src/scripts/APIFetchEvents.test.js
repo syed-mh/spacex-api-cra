@@ -1,169 +1,47 @@
 import APIFetchEvents from "./APIFetchEvents";
+import TestVariables from "./APIFetchEvents.testVariables";
 
-test("Sort resources by date [asc]", () => {
-  const RESOURCE = [
-    {
-      date_utc: "2006-03-24T22:30:00.000Z",
-      id: "5eb87cd9ffd86e000604b32a",
-    },
-    {
-      date_utc: "2007-03-21T01:10:00.000Z",
-      id: "5eb87cdaffd86e000604b32b",
-    },
-    {
-      date_utc: "2008-08-03T03:34:00.000Z",
-      id: "5eb87cdbffd86e000604b32c",
-    },
-  ];
-  expect(
-    new APIFetchEvents()._sortResourcesByDate(RESOURCE, "date_utc", "asc")
-  ).toEqual([
-    {
-      date_utc: "2008-08-03T03:34:00.000Z",
-      id: "5eb87cdbffd86e000604b32c",
-    },
-    {
-      date_utc: "2007-03-21T01:10:00.000Z",
-      id: "5eb87cdaffd86e000604b32b",
-    },
-    {
-      date_utc: "2006-03-24T22:30:00.000Z",
-      id: "5eb87cd9ffd86e000604b32a",
-    },
-  ]);
+describe("_sortResourcesByDate with invalid inputs", () => {
+  test.each`
+    RESOURCE                                                    | ERROR
+    ${TestVariables._sortResourcesByDate.invalidTest.inputs[0]} | ${TestVariables._sortResourcesByDate.invalidTest.errors[0]}
+    ${TestVariables._sortResourcesByDate.invalidTest.inputs[1]} | ${TestVariables._sortResourcesByDate.invalidTest.errors[1]}
+    ${TestVariables._sortResourcesByDate.invalidTest.inputs[2]} | ${TestVariables._sortResourcesByDate.invalidTest.errors[2]}
+    ${TestVariables._sortResourcesByDate.invalidTest.inputs[3]} | ${TestVariables._sortResourcesByDate.invalidTest.errors[3]}
+    ${TestVariables._sortResourcesByDate.invalidTest.inputs[4]} | ${TestVariables._sortResourcesByDate.invalidTest.errors[4]}
+    ${TestVariables._sortResourcesByDate.invalidTest.inputs[5]} | ${TestVariables._sortResourcesByDate.invalidTest.errors[5]}
+    ${TestVariables._sortResourcesByDate.invalidTest.inputs[6]} | ${TestVariables._sortResourcesByDate.invalidTest.errors[6]}
+  `("$RESOURCE throws $ERROR", ({ RESOURCE, ERROR }) => {
+    expect(() =>
+      new APIFetchEvents()._sortResourcesByDate(RESOURCE, "date_utc", "asc")
+    ).toThrowError(ERROR);
+  });
 });
 
-test("Sort resource by date [desc]", () => {
-  const RESOURCE = [
-    {
-      date_utc: "2008-08-03T03:34:00.000Z",
-      id: "5eb87cdbffd86e000604b32c",
-    },
-    {
-      date_utc: "2007-03-21T01:10:00.000Z",
-      id: "5eb87cdaffd86e000604b32b",
-    },
-    {
-      date_utc: "2006-03-24T22:30:00.000Z",
-      id: "5eb87cd9ffd86e000604b32a",
-    },
-  ];
-  expect(
-    new APIFetchEvents()._sortResourcesByDate(RESOURCE, "date_utc", "desc")
-  ).toEqual([
-    {
-      date_utc: "2006-03-24T22:30:00.000Z",
-      id: "5eb87cd9ffd86e000604b32a",
-    },
-    {
-      date_utc: "2007-03-21T01:10:00.000Z",
-      id: "5eb87cdaffd86e000604b32b",
-    },
-    {
-      date_utc: "2008-08-03T03:34:00.000Z",
-      id: "5eb87cdbffd86e000604b32c",
-    },
-  ]);
+describe("_sortResourcesByDate with valid inputs", () => {
+  test.each`
+    RESOURCE                                                  | ORDERBY                                                    | OUTPUT
+    ${TestVariables._sortResourcesByDate.validTest.inputs[0]} | ${TestVariables._sortResourcesByDate.validTest.orderby[0]} | ${TestVariables._sortResourcesByDate.validTest.outputs[0]}
+    ${TestVariables._sortResourcesByDate.validTest.inputs[1]} | ${TestVariables._sortResourcesByDate.validTest.orderby[1]} | ${TestVariables._sortResourcesByDate.validTest.outputs[1]}
+  `("$RESOURCE retuns $ORDERBY $OUTPUT", ({ RESOURCE, ORDERBY, OUTPUT }) => {
+    expect(
+      new APIFetchEvents()._sortResourcesByDate(RESOURCE, "date_utc", ORDERBY)
+    ).toEqual(OUTPUT);
+  });
 });
 
-test("Process LaunchCard", () => {
-  const LAUNCH = {
-    fairings: {
-      reused: null,
-      recovery_attempt: true,
-      recovered: true,
-      ships: ["5ea6ed2e080df4000697c908", "5ea6ed2e080df4000697c907"],
-    },
-    links: {
-      patch: {
-        small: "https://imgur.com/BrW201S.png",
-        large: "https://imgur.com/573IfGk.png",
-      },
-      reddit: {
-        campaign:
-          "https://www.reddit.com/r/spacex/comments/jhu37i/starlink_general_discussion_and_deployment_thread/",
-        launch:
-          "https://www.reddit.com/r/spacex/comments/ljkh7l/rspacex_starlink19_official_launch_discussion/",
-        media:
-          "https://www.reddit.com/r/spacex/comments/lkwllg/starlink19_media_thread_photographer_contest/",
-        recovery:
-          "https://www.reddit.com/r/spacex/comments/k2ts1q/rspacex_fleet_updates_discussion_thread/",
-      },
-      flickr: {
-        small: [],
-        original: [
-          "https://live.staticflickr.com/65535/50949943433_87e3002307_o.jpg",
-        ],
-      },
-      presskit: null,
-      webcast: "https://youtu.be/L0dkyV09Zso",
-      youtube_id: "L0dkyV09Zso",
-      article:
-        "https://spaceflightnow.com/2021/02/16/spacex-successfully-deploys-60-more-starlink-satellites-but-loses-booster-on-descent/",
-      wikipedia: "https://en.wikipedia.org/wiki/Starlink",
-    },
-    static_fire_date_utc: "2021-02-13T18:17:00.000Z",
-    static_fire_date_unix: 1613240220,
-    tbd: false,
-    net: false,
-    window: null,
-    rocket: "5e9d0d95eda69973a809d1ec",
-    success: true,
-    details:
-      "This mission launches the eighteenth batch of operational Starlink satellites, which are version 1.0, from SLC-40. It is the nineteenth Starlink launch overall. The satellites will be delivered to low Earth orbit and will spend a few weeks maneuvering to their operational altitude. The booster is expected to land on an ASDS.",
-    crew: [],
-    ships: ["5ea6ed30080df4000697c913"],
-    capsules: [],
-    payloads: ["600f9bc08f798e2a4d5f97a4"],
-    launchpad: "5e9e4501f509094ba4566f84",
-    auto_update: true,
-    launch_library_id: "985f1cc1-82c1-4a89-b2cc-e9dc91829a0e",
-    failures: [],
-    flight_number: 117,
-    name: "Starlink-19 (v1.0)",
-    date_utc: "2021-02-16T03:59:00.000Z",
-    date_unix: 1613447940,
-    date_local: "2021-02-15T22:59:00-05:00",
-    date_precision: "hour",
-    upcoming: false,
-    cores: [
-      {
-        core: "5e9e28a7f359187afd3b2662",
-        flight: 6,
-        gridfins: true,
-        legs: true,
-        reused: true,
-        landing_attempt: true,
-        landing_success: false,
-        landing_type: "ASDS",
-        landpad: "5e9e3032383ecb6bb234e7ca",
-      },
-    ],
-    id: "600f9a5e8f798e2a4d5f979c",
-  };
-  expect(new APIFetchEvents()._processLaunchCard(LAUNCH)).toEqual({
-    id: "600f9a5e8f798e2a4d5f979c",
-    name: "Starlink-19 (v1.0)",
-    details:
-      "This mission launches the eighteenth batch of operational Starlink satellites, which are version 1.0, from SLC-40. It is the nineteenth Starlink launch overall. The satellites will be delivered to low Earth orbit and will spend a few weeks maneuvering to their operational altitude. The booster is expected to land on an ASDS.",
-    date_utc: "Feb 16, 2021, 8:59:00 AM",
-    success: true,
-    launchpad: "5e9e4501f509094ba4566f84",
-    links: {
-      article:
-        "https://spaceflightnow.com/2021/02/16/spacex-successfully-deploys-60-more-starlink-satellites-but-loses-booster-on-descent/",
-      reddit:
-        "https://www.reddit.com/r/spacex/comments/jhu37i/starlink_general_discussion_and_deployment_thread/",
-      webcast: "https://youtu.be/L0dkyV09Zso",
-      wikipedia: "https://en.wikipedia.org/wiki/Starlink",
-    },
-    featuredImage:
-      "https://live.staticflickr.com/65535/50949943433_87e3002307_o.jpg",
-    patch: "https://imgur.com/573IfGk.png",
+describe("_processLaunchCard with valid inputs", () => {
+  test.each`
+    LAUNCH                                                  | OUTPUT
+    ${TestVariables._processLaunchCard.validTest.inputs[0]} | ${TestVariables._processLaunchCard.validTest.outputs[0]}
+    ${TestVariables._processLaunchCard.validTest.inputs[1]} | ${TestVariables._processLaunchCard.validTest.outputs[1]}
+  `("$LAUNCH gets converted into $OUTPUT", ({ LAUNCH, OUTPUT }) => {
+    expect(new APIFetchEvents()._processLaunchCard(LAUNCH)).toEqual(OUTPUT);
   });
 });
 
 test("Process Launch", () => {
+  jest.setTimeout(100000);
   const LAUNCHENDPOINT = "launches/600f9a5e8f798e2a4d5f979c";
   return new APIFetchEvents()
     ._processLaunchData(LAUNCHENDPOINT)

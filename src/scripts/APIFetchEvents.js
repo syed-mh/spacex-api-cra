@@ -23,7 +23,7 @@ const APIFetchEvents = class {
    * @returns { Array<Object> } - Sorted resources
    */
   _sortResourcesByDate = (RESOURCE, SORTBY = "date_utc", ORDER = "asc") => {
-    if (!RESOURCE || !Object.keys(RESOURCE).length)
+    if (!Array.isArray(RESOURCE) || !RESOURCE.length)
       throw new Error(
         `No/invalid RESOURCE provided to <APIFetchEvents._sortResourcesByDate>. RESOURCE received: ${JSON.stringify(
           RESOURCE
@@ -36,7 +36,7 @@ const APIFetchEvents = class {
         return ORDER === "asc" ? -_comparison : _comparison;
       });
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
     }
   };
   /**
@@ -71,7 +71,7 @@ const APIFetchEvents = class {
       });
       return _data;
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
     }
   };
   /**
@@ -100,7 +100,7 @@ const APIFetchEvents = class {
       });
       return LAUNCHES;
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
     }
   };
   /**
@@ -142,15 +142,13 @@ const APIFetchEvents = class {
       }
       if (links.webcast) _launch.links.webcast = links.webcast;
       if (links.wikipedia) _launch.links.wikipedia = links.wikipedia;
-      _launch.featuredImage = links.flickr.original.length
-        ? links.flickr.original[0]
-        : null;
-      _launch.patch = links.patch.large ? links.patch.large : null;
+      _launch.featuredImage = links.flickr.original[0] || null;
+      _launch.patch = links.patch.large || null;
       if (!Object.keys(_launch.links)) _launch.links = null;
 
       return _launch;
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
     }
   };
   /**
@@ -181,7 +179,7 @@ const APIFetchEvents = class {
         return launchpad;
       });
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
     }
   };
   /**
@@ -215,7 +213,7 @@ const APIFetchEvents = class {
         ).slice(0, 4),
       };
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
     }
   };
   /**
@@ -233,7 +231,7 @@ const APIFetchEvents = class {
         launches: _launches,
       };
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
     }
   };
   /**
@@ -277,7 +275,7 @@ const APIFetchEvents = class {
       });
       return _launch;
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
     }
   };
   /**
@@ -292,7 +290,7 @@ const APIFetchEvents = class {
         launchpads: this._setLaunchesPerLaunchpad(_rawData[1], _rawData[0]),
       };
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
     }
   };
   /**
@@ -323,7 +321,7 @@ const APIFetchEvents = class {
       }
       return _responses;
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
     }
   };
   /**
@@ -362,7 +360,7 @@ const APIFetchEvents = class {
       }
       await SETTER(data);
     } catch (error) {
-      throw new Error(error);
+      console.error(error);
     }
   };
 };
